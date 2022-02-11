@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Antonio:wght@100&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+
+body {
+    background-color: #F0F8FF;
+}
+
+.wrapper {
+    display: flex;
+    position: relative;
+}
+
+.wrapper .sidebar {
+    position: fixed;
+    width: 200px;
+    height: 100%;
+    background-color: #0A0A68;
+    padding: 30px 0;
+    font-family: 'Antonio', sans-serif;
+}
+
+.wrapper .sidebar h2{
+    color: #fff;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.wrapper .sidebar ul li{
+    padding: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    border-top: 1px solid rgba(225,225,225,0.1);
+    transition: all 0.3s ease 0s;
+}
+
+.wrapper .sidebar ul li a{
+    color: #bdb8d7;
+    display: block;
+    transition: all 0.3s ease 0s;
+}
+
+.wrapper .sidebar ul li:hover{
+    background-color: #1212A2;
+}
+
+.wrapper .sidebar ul li:hover a{
+    color: #fff;
+}
+
+main {
+    width: 100%;
+    margin-left: 200px;
+}
+
+h1 {
+    background-color: #fff;
+    color: #0A0A68;
+    padding: 25px;
+    border-bottom: 1px solid #090950;
+}
+
+h2 {
+    color: #0A0A68;
+}
+
+.content {
+    display: flex;
+}
+
+.section {
+    margin: 10px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.section p {
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.use_case {
+    display: flex;
+    flex-direction: column;
+}
+
+.use_case figure {
+    align-self: center;
+}
+
+.use_case figure img {
+    max-height: 250px;
+}
+
+figcaption {
+    text-align: center;
+}
+
+button {
+    background-color: #0A0A68;
+    padding: 12px 28px;
+    font-size: 14px;
+    border-radius: 8px;
+    color: #bdb8d7;
+    transition: all 0.3s ease 0s;
+}
+
+button:hover {
+    background-color: #1212A2;
+}
+
+.selectable:hover {
+    opacity: 0.5;
+}
+
+.selectable {
+    border: 2px solid black;
+
+}
+
+.selected {
+    background: red;
+}
+
+.selected img {
+    opacity: 0.4;
+}
+
+.img_row {
+    width: 80%;
+    margin: auto;
+}
+
+#chips_holder {
+    display: flex;
+    flex-direction: row;
+    width: 60%;
+}
+
+.img_row fig {
+    display: block;
+    border: 2px solid black;
+}
+
+.img_row fig img {
+    display: block;
+    width: 100%;
+}

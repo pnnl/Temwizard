@@ -1,0 +1,134 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+
+      #tooltip {
+        position: absolute;
+        width: auto;
+        height: auto;
+        padding: 10px;
+        background-color: white;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+        -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+        pointer-events: none;
+        opacity: .9;
+      }
+
+      #tooltip.hidden {
+        display: none;
+      }
+
+      #tooltip p {
+        margin: 0;
+        font-family: Futura;
+        font-size: 16px;
+        line-height: 20px;
+      }
+
+.rule {
+height: 90%;
+position: absolute;
+border-right: 5px;
+text-align: right;
+}
+
+span {
+    margin-right: 0.5em;
+}
+
+.one {
+    width: 1000px;
+    float: left;
+    height: 80%;
+  }
+
+.two {
+    margin-left: 1000px;
+    height: 100%;
+  }
+
+.three {
+    position: relative;
+    float: right;
+  }
+</style>
+
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+      <body>
+        <div>
+            <div class="one">
+                <form action="" method="post" novalidate>
+                    {{ form.hidden_tag() }}
+                    <p>
+                        {{ wtf.quick_form(form)}}
+                    </p>
+                </form>
+                <div>
+
+                    <div id="line_chart"></div>
+                </div>
+<!--
+                <div id="chart" class="table"></div> -->
+            </div>
+            <!-- <div id="tooltip" class="hidden">
+              <p><strong>Values</strong></p>
+              <p><span id="value">100</span></p>
+            </div> -->
+
+            <div  class = "two">
+              <div  class = "three">
+              <p>Select SubLattice</p>
+                <select id="selectPlaneSublattice"></select> <br>
+                  <p>Select Feature</p>
+                <select id="selectFeature"></select> <br>
+                  <p>Select Plane for Shapes</p>
+                <select id="selectPlane"></select> <br>
+                  <p>Select Reference Shape</p>
+                <select id="selectPolygon"></select> <br>
+
+                <p>Select Multiple Planes to draw on image</p>
+                <select multiple id="multiSelectPlane"></select>
+
+                </div>
+              <div id="map" ></div>
+
+            <div id="map2" ></div>
+            </div>
+
+
+        </div>
+
+      </body>
+
+    <script>
+    var image = "{{ image.image}}";
+
+    var image2 = "{{ image.image2}}";
+    var data = {{ data|  tojson}};
+    var zone_all = {{ tables.all_zones| tojson }};
+
+    var sublattice_all = {{ tables.all_sublattices| tojson }};
+    </script>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/datatables/jquery.datatables.min.css">
+    <script type="text/javascript" charset="utf8" src="../static/datatables/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/datatables/Buttons-1.6.2/css/buttons.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src ="../static/datatables/Buttons-1.6.2/js/datatables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf8" src ="../static/datatables/Buttons-1.6.2/js/buttons.html5.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/datatables/Select-1.3.1/css/select.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src ="../static/datatables/Select-1.3.1/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/line_chart.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/atom_map2.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/datatable.js') }}"></script>
+
+{% endblock %}

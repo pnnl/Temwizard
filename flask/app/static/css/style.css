@@ -1,0 +1,234 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #444;
+}
+/*
+ * Formatting the header area
+ */
+header {
+  background-color:  #616265;
+  height: 45px;
+  width: 100%;
+  opacity: .9;
+  margin-bottom: 15px;
+}
+header h1.logo {
+  margin: 0;
+  font-size: 1.7em;
+  color: #fff;
+  text-transform: uppercase;
+  float: left;
+}
+header h1.logo:hover {
+  color: #fff;
+  text-decoration: none;
+}
+/*
+ * Centering the body content
+ */
+
+div.special_table_page {
+  width: 100%;
+  margin: 0 auto;
+  overflow: scroll;
+  border: 2px solid gray;
+}
+.container {
+  width: 95%;
+  margin: 0 auto;
+}
+
+
+div.home {
+  padding: 10px 0 10px 0;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+div.about {
+  padding: 10px 0 30px 0;
+  background-color: #E6E6FA;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+h2 {
+  font-size: 3em;
+  margin-top: 40px;
+  text-align: center;
+  letter-spacing: -2px;
+}
+h3 {
+  font-size: 1.7em;
+  font-weight: 100;
+  margin-top: 30px;
+  text-align: center;
+  letter-spacing: -1px;
+  color: #999;
+}
+hr{
+  border:1px solid gray;
+}
+.menu {
+  float: right;
+  margin-top: 8px;
+}
+.menu li {
+  display: inline;
+}
+.menu li + li {
+  margin-left: 35px;
+}
+.menu li a {
+  color: rgb(255, 247, 247);
+  text-decoration: none;
+}
+
+td {
+  white-space: nowrap;
+  overflow: hidden;         /* <- this does seem to be required */
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  word-break:break-all;
+  max-width: 350px; */
+}
+
+div.grd_tblCont table td {
+  /* white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;*/
+  word-break:break-all;
+  max-width: 500px;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+ div.grd_tblCont table {
+  table-layout: fixed;
+}
+
+#loading {
+   width: 100%;
+   height: 100%;
+   top: 0;
+   left: 0;
+   position: fixed;
+   background-color: #fff;
+   z-index: 9999;
+   text-align: center;
+}
+
+/*.truncate {
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 150px;
+}
+
+.ele-clone {
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  position: fixed;
+} */
+
+.custom-checkbox {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+  box-shadow: 0 0 2pt 2pt #333
+}
+
+/* On mouse-over, add a grey background color */
+.custom-checkbox:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.custom-checkbox input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.custom-checkbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.custom-checkbox .checkmark:after {
+  top: 9px;
+  left: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+
+.flexbox-container {
+  display: -ms-flex;
+	display: -webkit-flex;
+	display: flex;
+}
+
+.flexbox-container [class*="col-"] > .well {
+  height:100%
+}
+
+#events {
+  margin-bottom: 1em;
+  padding: 1em;
+  background-color: #f6f6f6;
+  border: 1px solid #999;
+  border-radius: 3px;
+  height: 100px;
+  overflow: auto;
+}
+
+.green {
+  background-color: LightGreen;
+}
+.yellow {
+  background-color: LightGoldenRodYellow;
+}
+.red {
+  background-color: LightCoral;
+}

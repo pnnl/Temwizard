@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+  .one {
+      width: 500px;
+      float: left;
+      height: 80%;
+      padding-top: 50px;
+       padding-right: 30px;
+       padding-bottom: 50px;
+       padding-left: 80px;
+    }
+
+    .two {
+        width: 500px;
+        height: 100%;
+        margin-left: 510px;
+        padding-top: 50px;
+       padding-right: 30px;
+       padding-bottom: 50px;
+       padding-left: 80px;
+      }
+
+  #inner {
+    width: 50%;
+    margin: 0 auto;
+  }
+</style>
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+<body>
+  <div>
+      <div class="one">
+          <form action="" method="post" novalidate>
+            
+              <p> Fill in step 6. Select the zone Sublattice C is in between</p>
+              {{ form.hidden_tag() }}
+              <p>
+                  {{ wtf.quick_form(form)}}
+              </p>
+          </form>
+          <button id="send_data">Proceed to Step 4: Find Sublattice C</button>
+          </div>
+
+      <div  class = "two">
+          <div id="inner">
+          <p>Select Zones to View</p>
+        <select multiple id="multiSelectPlane"></select>
+        </div>
+
+
+        <div id="map" ></div>
+      </div>
+
+
+  </div>
+
+</body>
+
+    <script>
+    var image = "{{ image.image}}";
+    var data = {{ data|  tojson}};
+    var zone_all = {{ tables.all_zones| tojson }};
+    console.log(zone_all)
+
+    var getUrl = window.location;
+    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
+    image  = baseUrl + image
+
+    </script>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/atom_map_sublattice.js') }}"></script>
+    <script>
+
+
+
+    $(document).ready(function () {
+      $("#send_data").on("click", function() {
+        window.location.href = '/fourth_sublattice?image=' + document.getElementById('image').value  +
+        "&scale_image=" + document.getElementById('scale_image').value +
+        "&pixels_nanometer=" + document.getElementById('pixels_nanometer').value +
+        '&max_dist='+ document.getElementById('max_dist').value +
+        "&plane_first_sublattice=" + document.getElementById('plane_first_sublattice').value +
+        "&plane_second_sublattice=" + document.getElementById('plane_second_sublattice').value
+      });
+    });
+    </script>
+{% endblock %}
