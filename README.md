@@ -3,7 +3,7 @@ What is TEMWizard?
 
 Atomap is a software tool for determining the position and other qualities of atomic columns in STEM-images. The tool requires user inputs on image qualities such as atom distance and sublattice location. Our application, TemWizard, is used to visualize intermediate and final results from Atomap, which makes it easier for the user to provide the correct inputs to the Atomap. Python, D3, and the Atomap library were integrated with Flask, a Python web framework. The final result from the Temwizard framework is an interactive visualization of the Atomap results. 
 
-Nord, M., Vullum, P. E., MacLaren, I., Tybell, T., & Holmestad, R. (2017). Atomap: a new software tool for the automated analysis of atomic resolution images using two-dimensional Gaussian fitting. Advanced structural and chemical imaging, 3(1), 1-12.
+<b>Atomap</b>: Nord, M., Vullum, P. E., MacLaren, I., Tybell, T., & Holmestad, R. (2017). Atomap: a new software tool for the automated analysis of atomic resolution images using two-dimensional Gaussian fitting. Advanced structural and chemical imaging, 3(1), 1-12.
 
 This code was developed under support by the U.S. Department of Energy (DOE), Office of Science, Office of Basic Energy Sciences, Division of Materials Sciences and Engineering under Award #10122. 
 
