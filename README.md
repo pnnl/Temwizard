@@ -1,9 +1,13 @@
 What is TEMWizard?
 ==================
 
-Atomap is a software tool for determining the position and other qualities of atomic columns in STEM-images. The tool requires user inputs on image qualities such as atom distance and sublattice location. Our application, TemWizard, is used to visualize intermediate and final results from Atomap, which makes it easier for the user to provide the correct inputs to the Atomap. Python, D3, and the Atomap library were integrated with Flask, a Python web framework. The final result from the Temwizard framework is an interactive visualization of the Atomap results. 
+TEMWizard is used to visualize intermediate and final results from Atomap, an open-source software tool for determining the position and other features of atomic columns in transmission electron microscopy (TEM) images. TEMWizard provides an easy-to-use graphical user interface (GUI) for Atomap, allowing the user to provide correct inputs and visualize lattice displacements for analysis of phenomena such as octahedral rotations or bond distortions. It is built atop Python and D3, using  the Atomap library integrated ih Flask, a Python web framework.
 
-<b>Atomap</b>: Nord, M., Vullum, P. E., MacLaren, I., Tybell, T., & Holmestad, R. (2017). Atomap: a new software tool for the automated analysis of atomic resolution images using two-dimensional Gaussian fitting. Advanced structural and chemical imaging, 3(1), 1-12.
+To learn more about <b>Atomap</b> see the following:
+
+* Nord, M., Vullum, P. E., MacLaren, I., Tybell, T., & Holmestad, R. (2017). Atomap: a new software tool for the automated analysis of atomic resolution images using two-dimensional Gaussian fitting. Advanced Structural and chemical imaging, 3(1), 1-12.
+
+* Visit the Atomap webppage https://atomap.org/
 
 This code was developed under support by the U.S. Department of Energy (DOE), Office of Science, Office of Basic Energy Sciences, Division of Materials Sciences and Engineering under Award #10122. 
 
@@ -54,9 +58,7 @@ Installation
  How to Cite TEMWizard
  ======================
 
-  If you find this application useful and want to publish your results, please cite our preprint:
-
-  X
+  If you find this application useful and want to publish your results, please cite our repository.
 
  Contact Information
  ======================
