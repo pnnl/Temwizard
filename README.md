@@ -16,11 +16,11 @@ How to Use TEMWizard
 
 1. Update filename and click "Rerun Atomap on current page" to reload
 
-<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_1.png" width="700">
+<center><img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_1.png" width="700">
 
 2. Click on image to get pixel distance between atoms. Update half this value to "Half the distance between most intense atoms"
 
-<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_2.png" width="700">
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_2.png" width="300">
 
 3. Click "Proceed to Step 2"
 
