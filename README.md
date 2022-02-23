@@ -15,29 +15,29 @@ How to Use TEMWizard
 ======================
 
 1. Update filename and click "Rerun Atomap on current page" to reload
-
-<center><img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_1.png" width="700">
-
+<p align="center">
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_1.png" width="700">
+</p>
 2. Click on image to get pixel distance between atoms. Update half this value to "Half the distance between most intense atoms"
-
+<p align="center">
 <img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_2.png" width="300">
-
+</p>
 3. Click "Proceed to Step 2"
-
+<p align="center">
 <img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_3.png" width="300">
-
+</p>
 4. Select the zones the 2nd sublattice is between
-
+<p align="center">
 <img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_4.png" width="700">
-
+</p>
 5. If there is no third sublattice, click "View full results"
-
+<p align="center">
 <img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_5.png" width="700">
-
+</p>
 6. In full results, select features for the y axis of the graph and select zones for the x axis of the graph
-
+<p align="center">
 <img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_7.png" width="700">
-
+</p>
 
 
 Installation
