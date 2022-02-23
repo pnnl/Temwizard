@@ -16,6 +16,8 @@ How to Use TEMWizard
 
 Screenshots
 
+![alt text](https://github.com/pnnl/Temwizard/blob/master/flask/app/static/docs/images/screenshot_1.png?raw=true)
+
 Installation
 ======================
 
