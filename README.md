@@ -18,7 +18,7 @@ How to Use TEMWizard
 <p align="center">
 <img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_1.png" width="700">
 </p>
-2. Click on image to get pixel distance between atoms. Update half this value to "Half the distance between most intense atoms"
+2. Click on image to get pixel distance between atoms. Update half this value to "Half the distance between most intense atoms" and run "Rerun Atomap on current page". Try new values until the atoms in the most intense sublattice are identified. 
 <p align="center">
 <img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_2.png" width="300">
 </p>
@@ -26,15 +26,15 @@ How to Use TEMWizard
 <p align="center">
 <img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_3.png" width="300">
 </p>
-4. Select the zones the 2nd sublattice is between
+4. Select the zones in the first sublattice the 2nd sublattice is between. Use "Select Zones to View" to see the order identifying the zones in the first sublattice. Click "Proceed to Step 3" if you are happy with the second sublattice.
 <p align="center">
 <img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_4.png" width="700">
 </p>
-5. If there is no third sublattice, click "View full results"
+5. If there is no third sublattice, click "View full results". Otherwise repeat step 4. 
 <p align="center">
 <img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_5.png" width="700">
 </p>
-6. In full results, select features for the y axis of the graph and select zones for the x axis of the graph
+6. In full results, select features for the y axis of the graph and select zones for the x axis of the graph. The zones will also change which sublattice is outlines in the graph. 
 <p align="center">
 <img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_7.png" width="700">
 </p>
