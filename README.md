@@ -14,9 +14,31 @@ This code was developed under support by the U.S. Department of Energy (DOE), Of
 How to Use TEMWizard
 ======================
 
-Screenshots
+1. Update filename and click "Rerun Atomap on current page" to reload
 
-![alt text](https://github.com/pnnl/Temwizard/blob/master/flask/app/static/docs/images/screenshot_1.png?raw=true)
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_1.png" width="700">
+
+2. Click on image to get pixel distance between atoms. Update half this value to "Half the distance between most intense atoms"
+
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_2.png" width="700">
+
+3. Click "Proceed to Step 2"
+
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_3.png" width="300">
+
+4. Select the zones the 2nd sublattice is between
+
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_4.png" width="700">
+
+5. If there is no third sublattice, click "View full results"
+
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_5.png" width="700">
+
+6. In full results, select features for the y axis of the graph and select zones for the x axis of the graph
+
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_7.png" width="700">
+
+
 
 Installation
 ======================
