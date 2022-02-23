@@ -1,7 +1,7 @@
 What is TEMWizard?
 ==================
 
-TEMWizard is used to visualize intermediate and final results from Atomap, an open-source software tool for determining the position and other features of atomic columns in transmission electron microscopy (TEM) images. TEMWizard provides an easy-to-use graphical user interface (GUI) for Atomap, allowing the user to provide correct inputs and visualize lattice displacements for analysis of phenomena such as octahedral rotations or bond distortions. It is built atop Python and D3, using  the Atomap library integrated ih Flask, a Python web framework.
+TEMWizard is used to visualize intermediate and final results from Atomap, an open-source software tool for determining the position and other features of atomic columns in transmission electron microscopy (TEM) images. TEMWizard provides an easy-to-use graphical user interface (GUI) for Atomap, allowing the user to provide correct inputs and visualize lattice displacements for analysis of phenomena such as octahedral rotations or bond distortions. It is built atop Python and D3, using  the Atomap library integrated in Flask, a Python web framework.
 
 To learn more about Atomap see the following:
 
