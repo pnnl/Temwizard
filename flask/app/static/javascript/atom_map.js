@@ -448,11 +448,11 @@ else
                 .attr("points",function(d) {
                     return x_image(d.neighbor_1x) + "," +	y_image(d.neighbor_1y)	+ " " + x_image(d.neighbor_2x) + "," +	y_image(d.neighbor_2y) + " " +	x_image(d.neighbor_3x) + "," +	y_image(d.neighbor_3y) + " " +		x_image(d.neighbor_4x) + "," +	y_image(d.neighbor_4y)
                 })
-                .attr("stroke","red")
-                .attr("stroke-width", 3)
+                .attr("stroke","white")
+                .attr("stroke-width", 2)
                 .style("fill", function(d) {return shades(+d[selectedColumn])})
                 //.attr("test", function(d) {return console.log(zone_all[1].includes(d.combined)) })
-                .style("fill-opacity", 0)
+                .style("fill-opacity", .2)
                 .on("mouseover", function(d) {
 
                     d3.select("#tooltip")
@@ -486,70 +486,70 @@ else
             atom_rect.exit().remove();
 
 //add line for the angle of the line
-            // d3.selectAll("line.angleLine").remove()
-            // //line from center of atom to the center of 4 surrounding atoms (*10)
-            // var angleLine = svg
-            //       .selectAll("line.angleLine")
-            //       .data(neighbors_filter)
-            //
-            // var angleLineEnter = angleLine
-            //       .enter()
-            //       .append("line")
-            //       .attr("class", "angleLine")
-            //
-            //   angleLineEnter
-            //       .attr("x1", function (d) { return x_image(d.filtered_x_position); })
-            //       .attr("y1", function (d) { return y_image(d.filtered_y_position); })
-            //       .attr("x2", function (d) { return x_image(d.filtered_arrow_x); })
-            //       .attr("y2", function (d) { return y_image(d.filtered_arrow_y); })
-            //       .attr("stroke-width", 3)
-            //       .attr('stroke', "white")
-            //       // .on("mouseover", function(d) {
-            //       //         div.transition()
-            //       //             .duration(200)
-            //       //             .style("opacity", .9);
-            //       //         div	.html( d.combined_all)
-            //       //             .style("left", (d3.event.pageX) + "px")
-            //       //             .style("top", (d3.event.pageY - 28) + "px");
-            //       //           }
-            //       //         )
-            //
-            //     angleLineEnter.exit().remove()
+            d3.selectAll("line.angleLine").remove()
+            //line from center of atom to the center of 4 surrounding atoms (*10)
+            var angleLine = svg
+                  .selectAll("line.angleLine")
+                  .data(neighbors_filter)
 
-                //
-                // d3.selectAll("circle.center_dot").remove()
-                //
-                // //center_dot is the dot in the center two surrounding atoms
-                // var center_dot = svg
-                //   .selectAll("circle.center_dot")
-                //   .data(neighbors_filter)
-                //
-                // var center_dotEnter = center_dot
-                //   .enter()
-                //   .append("circle")
-                //   .attr("class", "center_dot")
-                //
-                // center_dotEnter
-                //   .attr("cx", function (d) { return x_image(d.center_neighborsx); } )
-                //   .attr("cy", function (d) { return y_image(d.center_neighborsy); } )
-                //   .attr("fill", "green")
-                //   .attr('r', 2)
+            var angleLineEnter = angleLine
+                  .enter()
+                  .append("line")
+                  .attr("class", "angleLine")
+
+              angleLineEnter
+                  .attr("x1", function (d) { return x_image(d.filtered_x_position); })
+                  .attr("y1", function (d) { return y_image(d.filtered_y_position); })
+                  .attr("x2", function (d) { return x_image(d.filtered_arrow_x); })
+                  .attr("y2", function (d) { return y_image(d.filtered_arrow_y); })
+                  .attr("stroke-width", 3)
+                  .attr('stroke', "white")
                   // .on("mouseover", function(d) {
                   //         div.transition()
                   //             .duration(200)
                   //             .style("opacity", .9);
-                  //         div	.html(d.x_position + "<br/>"  + d.y_position + "<br/>"  )
+                  //         div	.html( d.combined_all)
                   //             .style("left", (d3.event.pageX) + "px")
                   //             .style("top", (d3.event.pageY - 28) + "px");
-                  //         })
-                  //     .on("mouseout", function(d) {
-                  //         div.transition()
-                  //             .duration(500)
-                  //             .style("opacity", 0);
-                  //     });
+                  //           }
+                  //         )
+
+                angleLineEnter.exit().remove()
 
 
-                // center_dotEnter.exit().remove()
+                d3.selectAll("circle.center_dot").remove()
+
+                //center_dot is the dot in the center two surrounding atoms
+                var center_dot = svg
+                  .selectAll("circle.center_dot")
+                  .data(neighbors_filter)
+
+                var center_dotEnter = center_dot
+                  .enter()
+                  .append("circle")
+                  .attr("class", "center_dot")
+
+                center_dotEnter
+                  .attr("cx", function (d) { return x_image(d.center_neighborsx); } )
+                  .attr("cy", function (d) { return y_image(d.center_neighborsy); } )
+                  .attr("fill", "green")
+                  .attr('r', 2)
+                  .on("mouseover", function(d) {
+                          div.transition()
+                              .duration(200)
+                              .style("opacity", .9);
+                          div	.html(d.x_position + "<br/>"  + d.y_position + "<br/>"  )
+                              .style("left", (d3.event.pageX) + "px")
+                              .style("top", (d3.event.pageY - 28) + "px");
+                          })
+                      .on("mouseout", function(d) {
+                          div.transition()
+                              .duration(500)
+                              .style("opacity", 0);
+                      });
+
+
+                center_dotEnter.exit().remove()
 
 
 
@@ -655,6 +655,139 @@ else
 }
 
 
+function update_atom_min(){
+  var selectedColumn = d3.select("#selectFeature").property("value")
+
+
+  var selectedGroup_value = d3.select('#selectPlaneSublattice').property("value")
+
+
+  if (selectedGroup_value != "null"){
+    neighbors_filter = neighbors.filter(function(d){return d.combined==selectedGroup_value && d[selectedColumn] != null})}
+  else{
+    neighbors_filter = neighbors.filter(function(d){return d.plane== null})}
+  console.log(neighbors_filter)
+
+
+
+            d3.selectAll("polygon.tiles").remove()
+
+            //add color coded rectangles with values corresponding the 2nd plane (the default)
+            var atom_rect = svg.selectAll("polygon.tiles").data(neighbors_filter)
+            var atom_rectEnter = atom_rect
+                                  .enter()
+                                  .append("polygon")
+                                  .attr("class", "tiles")
+            atom_rectEnter
+                .attr("points",function(d) {
+                    return x_image(d.neighbor_1x) + "," +	y_image(d.neighbor_1y)	+ " " + x_image(d.neighbor_2x) + "," +	y_image(d.neighbor_2y) + " " +	x_image(d.neighbor_3x) + "," +	y_image(d.neighbor_3y) + " " +		x_image(d.neighbor_4x) + "," +	y_image(d.neighbor_4y)
+                })
+                .attr("stroke","red")
+                .attr("stroke-width", 3)
+                .style("fill", function(d) {return shades(+d[selectedColumn])})
+                //.attr("test", function(d) {return console.log(zone_all[1].includes(d.combined)) })
+                .style("fill-opacity", 0)
+                .on("mouseover", function(d) {
+
+                    d3.select("#tooltip")
+                      .style("left", (d3.event.pageX) + "px")
+                      .style("top", (d3.event.pageY - 28) + "px")
+                      .select("#value")
+                      .html("Combined All: " + d.combined_all + " <br/> "  +
+                                      "inner_angle_center_atom: " + d.inner_angle_center_atom + " <br/> "  +
+                                      "filtered_inner_angle_center_atom: " + d.inner_angle_center_atom + " <br/> "  +
+                                      "sigma_x: " + d.sigma_x + " <br/> "  +
+                                      "x_dist_center_atom: " + d.x_dist_center_atom + " <br/> "  +
+                                      "y_dist_center_atom: " + d.y_dist_center_atom + " <br/> "  +
+                                      "distance_next: " + d.distance_next + " <br/> "  +
+                                      "distance_prev: " + d.distance_prev + " <br/> "  +
+                                      "magnitude: " + d.magnitude + " <br/> "  +
+                                      "area: " + d.filtered_area + " <br/> "  +
+                                      "area: " + d.area + " <br/> "  +
+                                      "ratio_aspect: " + d.ratio_aspect);
+
+
+                    d3.select("#tooltip").classed("hidden", false);
+
+                   })
+                   .on("mouseout", function() {
+
+
+                    d3.select("#tooltip").classed("hidden", true);
+
+                   })
+
+            atom_rect.exit().remove();
+
+//add line for the angle of the line
+            d3.selectAll("line.angleLine").remove()
+            //line from center of atom to the center of 4 surrounding atoms (*10)
+            var angleLine = svg
+                  .selectAll("line.angleLine")
+                  .data(neighbors_filter)
+
+            var angleLineEnter = angleLine
+                  .enter()
+                  .append("line")
+                  .attr("class", "angleLine")
+
+              angleLineEnter
+                  .attr("x1", function (d) { return x_image(d.filtered_x_position); })
+                  .attr("y1", function (d) { return y_image(d.filtered_y_position); })
+                  .attr("x2", function (d) { return x_image(d.filtered_arrow_x); })
+                  .attr("y2", function (d) { return y_image(d.filtered_arrow_y); })
+                  .attr("stroke-width", 3)
+                  .attr('stroke', "white")
+                  // .on("mouseover", function(d) {
+                  //         div.transition()
+                  //             .duration(200)
+                  //             .style("opacity", .9);
+                  //         div	.html( d.combined_all)
+                  //             .style("left", (d3.event.pageX) + "px")
+                  //             .style("top", (d3.event.pageY - 28) + "px");
+                  //           }
+                  //         )
+
+                angleLineEnter.exit().remove()
+
+
+                d3.selectAll("circle.center_dot").remove()
+
+                //center_dot is the dot in the center two surrounding atoms
+                var center_dot = svg
+                  .selectAll("circle.center_dot")
+                  .data(neighbors_filter)
+
+                var center_dotEnter = center_dot
+                  .enter()
+                  .append("circle")
+                  .attr("class", "center_dot")
+
+                center_dotEnter
+                  .attr("cx", function (d) { return x_image(d.center_neighborsx); } )
+                  .attr("cy", function (d) { return y_image(d.center_neighborsy); } )
+                  .attr("fill", "green")
+                  .attr('r', 2)
+                  .on("mouseover", function(d) {
+                          div.transition()
+                              .duration(200)
+                              .style("opacity", .9);
+                          div	.html(d.x_position + "<br/>"  + d.y_position + "<br/>"  )
+                              .style("left", (d3.event.pageX) + "px")
+                              .style("top", (d3.event.pageY - 28) + "px");
+                          })
+                      .on("mouseout", function(d) {
+                          div.transition()
+                              .duration(500)
+                              .style("opacity", 0);
+                      });
+
+
+                center_dotEnter.exit().remove()
+
+}
+
+
 function update_plane_selection(){
   var selectedColumn = d3.select("#selectFeature").property("value")
 
@@ -710,6 +843,7 @@ function update_plane_selection(){
   }
 update_plane_selection()
 update_atom_line()
+update_atom_min()
 // update_atom()
 
 //if user select from top multi select, the lines for the plane will appear on the image - multiple lines are possible
@@ -722,6 +856,7 @@ multiSelectPlane.on("change",function(event) {
 selectedGroup.on("change",function(event) {
   update2(3)
   update_plane_selection()
+  update_atom_min()
   // update_atom()
                       })
 
@@ -730,18 +865,21 @@ selectedGroup.on("change",function(event) {
 d3.select("#selectFeature").on("change",function(event) {
         update2(3)
         update_plane_selection()
+        update_atom_min()
         // update_atom()
 
       })
 d3.select("#selectPlane").on("change",function(event) {
       //
       // update_atom()
+      update_atom_min()
 
     })
 
 d3.select("#selectPolygon").on("change",function(event) {
         //
         // update_atom()
+        update_atom_min()
 
       })
 // svg.selectAll("polygon")

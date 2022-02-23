@@ -23,7 +23,7 @@ var allGroup = d3.map(neighbors, function(d){return(d.combined)}).keys()
 
 var neighbors_filter = neighbors.filter(function(d){return d.combined==allGroup[0]})
 neighbors_filter.sort(function(a, b) {
-      return d3.ascending(a.x_position, b.x_position)
+      return d3.ascending(a.plane_position_df, b.plane_position_df)
     })
 
 console.log(neighbors_filter)
@@ -55,7 +55,7 @@ var sumstat = d3.nest() // nest function allows to group the calculation per lev
 
 // Add X axis --> it is a date format
 var x = d3.scaleLinear()
-  .domain([0, d3.max(neighbors_filter, function(d) { return +d.x_position; })])
+  .domain([0, d3.max(neighbors_filter, function(d) { return +d.plane_position_df; })])
   .range([ 0, width ]);
 var xAxis = svg2.append("g")
   .attr("transform", "translate(0," + height + ")")
@@ -120,7 +120,7 @@ svg2.selectAll("mylabels")
                   neighbors_filter = neighbors.filter(function(d){return d.combined==selectedGroup_value & d[selectedColumn]!=null})
 
                   neighbors_filter.sort(function(a, b) {
-                        return d3.ascending(a.x_position, b.x_position)
+                        return d3.ascending(a.plane_position_df, b.plane_position_df)
                       })
                   console.log(neighbors_filter)
                   sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
@@ -129,7 +129,7 @@ svg2.selectAll("mylabels")
 
 
                   // Add X axis --> it is a date format
-                  x.domain([0, d3.max(neighbors_filter, function(d) { return +d.x_position; })])
+                  x.domain([0, d3.max(neighbors_filter, function(d) { return +d.plane_position_df; })])
 
                   // Add Y axis
                   y.domain([d3.min(neighbors_filter, function(d) { return +d[selectedColumn]; }), d3.max(neighbors_filter, function(d) { return +d[selectedColumn]; })])
@@ -155,7 +155,7 @@ svg2.selectAll("mylabels")
                     .attr("stroke-width", 1.5)
                     .attr("d", function(d){
                       return d3.line()
-                        .x(function(d) { return x(+d.x_position); })
+                        .x(function(d) { return x(+d.plane_position_df); })
                         .y(function(d) { return y(+d[selectedColumn]); })
                         (d.values)
                     })

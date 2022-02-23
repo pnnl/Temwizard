@@ -36,7 +36,7 @@ def view_image():
     image_string = form.image.data
     pre_process = form.pre_process.data
     scale_image = form.scale_image.data
-    pixels_nanometer = int(form.pixels_nanometer.data)
+    pixels_nanometer = float(form.pixels_nanometer.data)
 
     s=hs.load(os.path.join(app.static_folder, "images/", image_string))
 
@@ -57,7 +57,7 @@ def first_sublattice():
     max_dist = form.max_dist.data
     max_dist = float(max_dist)
     scale_image = form.scale_image.data
-    pixels_nanometer = int(form.pixels_nanometer.data)
+    pixels_nanometer = float(form.pixels_nanometer.data)
     max_dist = max_dist*pixels_nanometer
 
     name = image_string.split('.')[0]
@@ -94,7 +94,7 @@ def second_sublattice():
         form.max_dist.data = float(request.args.get('max_dist'))
 
         form.scale_image.data = float(request.args.get('scale_image'))
-        form.pixels_nanometer.data = int(request.args.get('pixels_nanometer'))
+        form.pixels_nanometer.data = float(request.args.get('pixels_nanometer'))
         form.image.data = str(request.args.get('image'))
         # form.process()
 
@@ -105,7 +105,7 @@ def second_sublattice():
     max_dist = form.max_dist.data
     max_dist = float(max_dist)
     scale_image = form.scale_image.data
-    pixels_nanometer = int(form.pixels_nanometer.data)
+    pixels_nanometer = float(form.pixels_nanometer.data)
     max_dist = max_dist*pixels_nanometer
 
     name = image_string.split('.')[0]
@@ -141,7 +141,7 @@ def third_sublattice():
     if request.method == 'GET':
         form.image.data = str(request.args.get('image'))
         form.scale_image.data = float(request.args.get('scale_image'))
-        form.pixels_nanometer.data = int(request.args.get('pixels_nanometer'))
+        form.pixels_nanometer.data = float(request.args.get('pixels_nanometer'))
         form.max_dist.data = float(request.args.get('max_dist'))
         form.plane_first_sublattice.data = int(request.args.get('plane_first_sublattice'))
         form.plane_second_sublattice.data = int(request.args.get('plane_second_sublattice'))
@@ -153,7 +153,7 @@ def third_sublattice():
     max_dist = form.max_dist.data
     max_dist = float(max_dist)
     scale_image = form.scale_image.data
-    pixels_nanometer = int(form.pixels_nanometer.data)
+    pixels_nanometer = float(form.pixels_nanometer.data)
     max_dist = max_dist*pixels_nanometer
 
     name = image_string.split('.')[0]
@@ -189,7 +189,7 @@ def fourth_sublattice():
     if request.method == 'GET':
         form.image.data = str(request.args.get('image'))
         form.scale_image.data = float(request.args.get('scale_image'))
-        form.pixels_nanometer.data = int(request.args.get('pixels_nanometer'))
+        form.pixels_nanometer.data = float(request.args.get('pixels_nanometer'))
         form.max_dist.data = float(request.args.get('max_dist'))
         form.plane_first_sublattice.data = int(request.args.get('plane_first_sublattice'))
         form.plane_second_sublattice.data = int(request.args.get('plane_second_sublattice'))
@@ -201,7 +201,7 @@ def fourth_sublattice():
     max_dist = form.max_dist.data
     max_dist = float(max_dist)
     scale_image = form.scale_image.data
-    pixels_nanometer = int(form.pixels_nanometer.data)
+    pixels_nanometer = float(form.pixels_nanometer.data)
     max_dist = max_dist*pixels_nanometer
 
     name = image_string.split('.')[0]
@@ -238,7 +238,7 @@ def fifth_sublattice():
     if request.method == 'GET':
         form.image.data = str(request.args.get('image'))
         form.scale_image.data = float(request.args.get('scale_image'))
-        form.pixels_nanometer.data = int(request.args.get('pixels_nanometer'))
+        form.pixels_nanometer.data = float(request.args.get('pixels_nanometer'))
         form.max_dist.data = float(request.args.get('max_dist'))
         form.plane_first_sublattice.data = int(request.args.get('plane_first_sublattice'))
         form.plane_second_sublattice.data = int(request.args.get('plane_second_sublattice'))
@@ -251,7 +251,7 @@ def fifth_sublattice():
     max_dist = float(max_dist)
 
     scale_image = form.scale_image.data
-    pixels_nanometer = int(form.pixels_nanometer.data)
+    pixels_nanometer = float(form.pixels_nanometer.data)
     max_dist = max_dist*pixels_nanometer
     name = image_string.split('.')[0]
     ext = image_string.split('.')[1]
@@ -297,7 +297,7 @@ def chart(dist):
     # subtract_image = form.subtract_image.data
     #
     # scale_image = form.scale_image.data
-    # pixels_nanometer = int(form.pixels_nanometer.data)
+    # pixels_nanometer = float(form.pixels_nanometer.data)
     #
     # max_dist = max_dist*pixels_nanometer
     # print(max_dist)

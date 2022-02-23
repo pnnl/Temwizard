@@ -31,7 +31,7 @@
   <div>
       <div class="one">
           <form action="" method="post" novalidate>
-            
+
               <p> Fill in step 6. Select the zone Sublattice C is in between</p>
               {{ form.hidden_tag() }}
               <p>
@@ -39,6 +39,8 @@
               </p>
           </form>
           <button id="send_data">Proceed to Step 4: Find Sublattice C</button>
+          <button id="send_data2">Or Proceed to Step 6: View full results</button>
+
           </div>
 
       <div  class = "two">
@@ -78,6 +80,22 @@
     $(document).ready(function () {
       $("#send_data").on("click", function() {
         window.location.href = '/fourth_sublattice?image=' + document.getElementById('image').value  +
+        "&scale_image=" + document.getElementById('scale_image').value +
+        "&pixels_nanometer=" + document.getElementById('pixels_nanometer').value +
+        '&max_dist='+ document.getElementById('max_dist').value +
+        "&plane_first_sublattice=" + document.getElementById('plane_first_sublattice').value +
+        "&plane_second_sublattice=" + document.getElementById('plane_second_sublattice').value
+      });
+    });
+    </script>
+
+    <script>
+
+
+
+    $(document).ready(function () {
+      $("#send_data2").on("click", function() {
+        window.location.href = '/fifth_sublattice?image=' + document.getElementById('image').value  +
         "&scale_image=" + document.getElementById('scale_image').value +
         "&pixels_nanometer=" + document.getElementById('pixels_nanometer').value +
         '&max_dist='+ document.getElementById('max_dist').value +

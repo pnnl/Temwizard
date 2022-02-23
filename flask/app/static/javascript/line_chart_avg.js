@@ -4,7 +4,7 @@ console.log(feature)
 
 var scale_image = data.dim.scale_image
 var height = data.dim.height*scale_image
-
+var pixels_nanometer = data.dim.pixels_nanometer
 //https://www.d3-graph-gallery.com/graph/line_several_group.html
 // set the dimensions and margins of the graph
 var margin = {top: 50, right: 200, bottom: 30, left: 60},
@@ -58,18 +58,19 @@ var sumstat = d3.nest() // nest function allows to group the calculation per lev
 
 // Add X axis --> it is a date format
 var x = d3.scaleLinear()
-  .domain([0, d3.max(neighbors_filter, function(d) { return +d[selectedColumn]; })])
+  .domain([-.02, .02])
   .range([ 0, width ]);
+
 var xAxis = svg2.append("g")
   .attr("transform", "translate(0," + height + ")")
-  .call(d3.axisBottom(x).ticks(20));
+  .call(d3.axisBottom(x).ticks(5));
 
 // Add Y axis
 var y = d3.scaleLinear()
-  .domain([0, d3.max(neighbors_filter, function(d) { return +d.y_position; })])
+  .domain([0, height/pixels_nanometer ])
   .range([0 ,  height ]);
 var yAxis = svg2.append("g")
-  .call(d3.axisLeft(y));
+.call(d3.axisLeft(y).ticks(20));
 
 var group_names = sumstat.map(function(d){ return d.key }) // list of group names
 
@@ -134,15 +135,18 @@ svg2.selectAll("mylabels")
 
 
                   // Add X axis --> it is a date format
-                  y.domain([0, d3.max(neighbors_filter, function(d) { return +d.y_position; })])
+                  //y.domain([0, d3.max(neighbors_filter, function(d) { return +d.y_position; })])
 
                   // Add Y axis
+                  console.log(selectedColumn)
                   x.domain([d3.min(neighbors_filter, function(d) { return +d[selectedColumn]; }), d3.max(neighbors_filter, function(d) { return +d[selectedColumn]; })])
+                  //x.domain([-.02, .02])
                   console.log(sumstat)
+                  console.log(x.domain())
 
 
-                  yAxis.transition().duration(1000).call(d3.axisLeft(y))
-                  xAxis.transition().duration(1000).call(d3.axisBottom(x))
+                  yAxis.transition().duration(1000).call(d3.axisLeft(y).ticks(40))
+                  xAxis.transition().duration(1000).call(d3.axisBottom(x).ticks(5))
 
                   title.text(selectedGroup_value + " by " + selectedColumn);
 

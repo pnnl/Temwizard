@@ -84,59 +84,6 @@ multiSelectPlane.selectAll("option")
      .property("selected", function(d){ return d === zone_all[0]; })
 
 
-function drawCircle(x, y, size) {
-       console.log('Drawing circle at', x, y, size);
-       svg.append("circle")
-           .attr('class', 'click-circle')
-           .attr("cx", x)
-           .attr("cy", y)
-
-      .style("fill", "yellow")
-           .attr("r", size);
-
-       selected_squares.push({
-           x: x,
-           y: y
-         })
-          console.log(selected_squares)
-   }
-   var n = 1
-   svg.on('click', function() {
-       if (n > 2){
-         var coords = d3.mouse(this);
-         n = 2
-         svg.selectAll("circle.click-circle").remove()
-         console.log(coords);
-         selected_squares = new Array();
-         drawCircle(coords[0], coords[1], 5);
-
-   } else if (n ==2) {
-
-  n = n + 1
-  var coords = d3.mouse(this);
-
-  drawCircle(coords[0], coords[1], 5);
-  dist = Math.hypot(selected_squares[0].x-selected_squares[1].x, selected_squares[0].y-selected_squares[1].y)
-  dist = scaled_to_pix(dist)
-  dist_nan = pix_to_nan(dist)
-  console.log(dist)
-
-  svg.selectAll("text").remove()
-  svg.append("text")
-          .attr("x", (x_image(width) / 2))
-          .attr("y", 0 - (margin.top / 2))
-          .attr("text-anchor", "middle")
-          .style("font-size", "16px")
-          .text(Math.round(dist) + " pixels / " + pixels_nanometer  + " = "+ Math.round(dist_nan* 100)/100 + "nm");
-         }
-
-
-       else {
-         n = n + 1
-          var coords = d3.mouse(this);
-          drawCircle(coords[0], coords[1], 5);
-       }
-   });
 
  //dot for center of atom
  var atom_dot = svg.append('g')
@@ -182,7 +129,7 @@ function update_atom_line(){
             .attr("y1", function (d) { return y_image(d.y_position); })
             .attr("x2", function (d) { return x_image(d.x_next); })
             .attr("y2", function (d) { return y_image(d.y_next); })
-            .attr("stroke-width", 1)
+            .attr("stroke-width", 2)
             .attr('stroke', "white")
 
     lineAtom.exit().remove();
@@ -195,3 +142,60 @@ multiSelectPlane.on("change",function(event) {
 })
 
 update_atom_line()
+
+
+
+function drawCircle(x, y, size) {
+       console.log('Drawing circle at', x, y, size);
+       svg.append("circle")
+           .attr('class', 'click-circle')
+           .attr("cx", x)
+           .attr("cy", y)
+
+      .style("fill", "yellow")
+           .attr("r", size);
+
+       selected_squares.push({
+           x: x,
+           y: y
+         })
+          console.log(selected_squares)
+   }
+   var n = 1
+   svg.on('click', function() {
+       if (n > 2){
+         var coords = d3.mouse(this);
+         n = 2
+         svg.selectAll("circle.click-circle").remove()
+         console.log(coords);
+         selected_squares = new Array();
+         drawCircle(coords[0], coords[1], 5);
+
+   } else if (n ==2) {
+
+  n = n + 1
+  var coords = d3.mouse(this);
+
+  drawCircle(coords[0], coords[1], 5);
+  dist = Math.hypot(selected_squares[0].x-selected_squares[1].x, selected_squares[0].y-selected_squares[1].y)
+  dist = scaled_to_pix(dist)
+  dist_nan = pix_to_nan(dist)
+  console.log(dist)
+  console.log(dist_nan)
+
+svg.selectAll("text").remove()
+svg.append("text")
+        .attr("x", (x_image(width) / 2))
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .text(Math.round(dist) + " pixels / " + pixels_nanometer  + " = "+ Math.round(dist_nan* 100)/100 + "nm");
+       }
+
+
+     else {
+       n = n + 1
+        var coords = d3.mouse(this);
+        drawCircle(coords[0], coords[1], 5);
+     }
+ });

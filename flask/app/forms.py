@@ -25,11 +25,11 @@ import datetime
 
 class FirstSublattice(FlaskForm):
     #max_dist image scale_image pixels_nanometer
-    image = StringField("1. Image Name", default="ABF_Inverted_No_Scale.jpg")
+    image = StringField("1. Image Name", default="adf1.jpg")
     scale_image = FloatField("2. Scale Image", default=1)
-    pixels_nanometer = IntegerField("3. Pixels per nanometer", default=218) #90
-    max_dist = FloatField("4. Half the distance between the most intense atoms", default=0.24) #.19
-    plane_first_sublattice = IntegerField("5. The second sublattice is on the line between which zone", default=1, description = "Indicate with the plane order (first is 0)")
+    pixels_nanometer = FloatField("3. Pixels per nanometer", default=1) #90 #218.365
+    max_dist = FloatField("4. Half the distance between the most intense atoms", default=45) #.19 #.24
+    plane_first_sublattice = IntegerField("5. The second sublattice is on the line between which zone", default=2, description = "Indicate with the plane order (first is 0)")
     plane_second_sublattice = IntegerField("6. The third sublattice is on the line between which zone", default=2, description = "Indicate with the plane order (first is 0)")
     #replace_hdf5 = BooleanField("Recreate the hdf5 file", default =  True)
     submit = SubmitField('Rerun Atomap on Current Page')
