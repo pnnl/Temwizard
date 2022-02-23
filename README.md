@@ -77,7 +77,7 @@ Installation
 
 `http://127.0.0.1:5000`
 
-9. Select atom by clicking on the center dot. The other atoms will be filtered out depending on if their values fall within the ranges indicated on the left. Click again of the dot to reset
+9. Follow directions under "How to use TemWizard"
 
  How to Cite TEMWizard
  ======================
