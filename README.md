@@ -1,7 +1,7 @@
 What is TEMWizard?
 ==================
 
-TEMWizard is used to visualize intermediate and final results from Atomap, an open-source software tool for determining the position and other features of atomic columns in transmission electron microscopy (TEM) images. TEMWizard provides an easy-to-use graphical user interface (GUI) for Atomap, allowing the user to provide correct inputs and visualize lattice displacements for analysis of phenomena such as octahedral rotations or bond distortions. It is built atop Python and D3, using  the Atomap library integrated ih Flask, a Python web framework.
+TEMWizard is used to visualize intermediate and final results from Atomap, an open-source software tool for determining the position and other features of atomic columns in transmission electron microscopy (TEM) images. TEMWizard provides an easy-to-use graphical user interface (GUI) for Atomap, allowing the user to provide correct inputs and visualize lattice displacements for analysis of phenomena such as octahedral rotations or bond distortions. It is built atop Python and D3, using  the Atomap library integrated in Flask, a Python web framework.
 
 To learn more about Atomap see the following:
 
@@ -14,7 +14,31 @@ This code was developed under support by the U.S. Department of Energy (DOE), Of
 How to Use TEMWizard
 ======================
 
-Screenshots
+1. Update filename and click "Rerun Atomap on current page" to reload
+<p align="center">
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_1.png" width="700">
+</p>
+2. Click on image to get pixel distance between atoms. Update half this value to "Half the distance between most intense atoms" and run "Rerun Atomap on current page". Try new values until the atoms in the most intense sublattice are identified. 
+<p align="center">
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_2.png" width="300">
+</p>
+3. Click "Proceed to Step 2"
+<p align="center">
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_3.png" width="300">
+</p>
+4. Select the zones in the first sublattice the 2nd sublattice is between. Use "Select Zones to View" to see the order identifying the zones in the first sublattice. Click "Proceed to Step 3" if you are happy with the second sublattice.
+<p align="center">
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_4.png" width="700">
+</p>
+5. If there is no third sublattice, click "View full results". Otherwise repeat step 4. 
+<p align="center">
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_5.png" width="700">
+</p>
+6. In full results, select features for the y axis of the graph and select zones for the x axis of the graph. The zones will also change which sublattice is outlines in the graph. 
+<p align="center">
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/docs/images/screenshot_7.png" width="700">
+</p>
+
 
 Installation
 ======================
@@ -53,7 +77,7 @@ Installation
 
 `http://127.0.0.1:5000`
 
-9. Select atom by clicking on the center dot. The other atoms will be filtered out depending on if their values fall within the ranges indicated on the left. Click again of the dot to reset
+9. Follow directions under "How to use TemWizard"
 
  How to Cite TEMWizard
  ======================
