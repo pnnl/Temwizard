@@ -4,7 +4,6 @@ from app.forms import FirstSublattice
 from config import *
 import os, pdb, math, json, time
 from csv_to_json import process_image, csv_to_json2
-#from initial_sublattice import first_sublattice_hdf5
 import pandas as pd
 import ast
 import re
@@ -12,7 +11,6 @@ import hyperspy.api as hs
 import atomap.api as am
 from os import path
 from PIL import Image
-import os
 import cv2
 from werkzeug import secure_filename
 
@@ -27,12 +25,9 @@ def add_header(response):
     return response
 
 
-
 @app.route('/process_image', methods=['GET', 'POST'])
 def view_image():
-
     form = ViewImageForm()
-
     image_string = form.image.data
     pre_process = form.pre_process.data
     scale_image = form.scale_image.data
@@ -71,17 +66,15 @@ def first_sublattice():
     feature, list_sublattice_a = csv_to_json2(image_string, max_dist, plane_first_sublattice, plane_second_sublattice, pixels_nanometer, step = "step_1")
     monolayer= pd.read_csv(os.path.join(app.static_folder, 'data_json/monolayer_test.csv'))
     neighbors = pd.read_csv(os.path.join(app.static_folder, 'data_json/neighbors_test.csv'), engine='python')
-    print(list_sublattice_a)
+
     tables = {}
     #have the options only be the planes available for sublattices 0 and 1
     tables["all_zones"] = neighbors['combined'].drop_duplicates().tolist()
     tables["all_sublattices"] = neighbors['sublattice_df'].drop_duplicates().tolist()
 
-
     neighbors_json = json.loads(neighbors.to_json(orient='records'))
-    monolayer_json = json.loads(monolayer.to_json(orient='records'))
 
-    data ={'dim': {'height': s.data.shape[0], 'width' : s.data.shape[1], 'separation': max_dist, 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}, 'neighbors': neighbors_json, 'monolayer': monolayer_json, 'feature': feature}
+    data ={'dim': {'height': s.data.shape[0], 'width' : s.data.shape[1], 'separation': max_dist, 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}, 'neighbors': neighbors_json, 'feature': feature}
 
     return render_template('chart_first_sublattice.html', data = data, form=form, tables =tables, image =  image, list_sublattice_a = str(list_sublattice_a))
 
@@ -118,7 +111,7 @@ def second_sublattice():
     feature, list_sublattice_a = csv_to_json2(image_string, max_dist, plane_first_sublattice, plane_second_sublattice, pixels_nanometer, step = "step_2")
     monolayer= pd.read_csv(os.path.join(app.static_folder, 'data_json/monolayer_test.csv'))
     neighbors = pd.read_csv(os.path.join(app.static_folder, 'data_json/neighbors_test.csv'), engine='python')
-    print(list_sublattice_a)
+
     list_sublattice_a = [str(x) for x in list_sublattice_a]
     tables = {}
     #have the options only be the planes available for sublattices 0 and 1
@@ -126,9 +119,9 @@ def second_sublattice():
     tables["all_sublattices"] = neighbors['sublattice_df'].drop_duplicates().tolist()
 
     neighbors_json = json.loads(neighbors.to_json(orient='records'))
-    monolayer_json = json.loads(monolayer.to_json(orient='records'))
 
-    data ={'dim': {'height': s.data.shape[0], 'width' : s.data.shape[1], 'separation': max_dist, 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}, 'neighbors': neighbors_json, 'monolayer': monolayer_json, 'feature': feature}
+
+    data ={'dim': {'height': s.data.shape[0], 'width' : s.data.shape[1], 'separation': max_dist, 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}, 'neighbors': neighbors_json, 'feature': feature}
 
     return render_template('chart_second_sublattice.html', data = data, form=form, tables =tables, image =  image, list_sublattice_a = str(list_sublattice_a))
 
@@ -174,9 +167,8 @@ def third_sublattice():
     tables["all_sublattices"] = neighbors['sublattice_df'].drop_duplicates().tolist()
 
     neighbors_json = json.loads(neighbors.to_json(orient='records'))
-    monolayer_json = json.loads(monolayer.to_json(orient='records'))
 
-    data ={'dim': {'height': s.data.shape[0], 'width' : s.data.shape[1], 'separation': max_dist, 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}, 'neighbors': neighbors_json, 'monolayer': monolayer_json, 'feature': feature}
+    data ={'dim': {'height': s.data.shape[0], 'width' : s.data.shape[1], 'separation': max_dist, 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}, 'neighbors': neighbors_json, 'feature': feature}
 
     return render_template('chart_third_sublattice.html', data = data, form=form, tables =tables, image =  image, list_sublattice_a = str(list_sublattice_a))
 
@@ -223,9 +215,8 @@ def fourth_sublattice():
     tables["all_sublattices"] = neighbors['sublattice_df'].drop_duplicates().tolist()
 
     neighbors_json = json.loads(neighbors.to_json(orient='records'))
-    monolayer_json = json.loads(monolayer.to_json(orient='records'))
 
-    data ={'dim': {'height': s.data.shape[0], 'width' : s.data.shape[1], 'separation': max_dist, 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}, 'neighbors': neighbors_json, 'monolayer': monolayer_json, 'feature': feature}
+    data ={'dim': {'height': s.data.shape[0], 'width' : s.data.shape[1], 'separation': max_dist, 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}, 'neighbors': neighbors_json, 'feature': feature}
 
     return render_template('chart_fourth_sublattice.html', data = data, form=form, tables =tables, image =  image, list_sublattice_a = str(list_sublattice_a))
 
@@ -259,9 +250,8 @@ def fifth_sublattice():
 
     s=hs.load(os.path.join(app.static_folder, "images/", image_string))
     image = {'image': "static/images/" + image_string}
-    #
+
     feature, list_sublattice_a = csv_to_json2(image_string, max_dist, plane_first_sublattice, plane_second_sublattice, pixels_nanometer, step = "step_5")
-    monolayer= pd.read_csv(os.path.join(app.static_folder, 'data_json/monolayer_test.csv'))
     neighbors = pd.read_csv(os.path.join(app.static_folder, 'data_json/neighbors_test.csv'), engine='python')
 
     tables = {}
@@ -270,60 +260,7 @@ def fifth_sublattice():
     tables["all_sublattices"] = neighbors['sublattice_df'].drop_duplicates().tolist()
 
     neighbors_json = json.loads(neighbors.to_json(orient='records'))
-    monolayer_json = json.loads(monolayer.to_json(orient='records'))
 
-    data ={'dim': {'height': s.data.shape[0], 'width' : s.data.shape[1], 'separation': max_dist, 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}, 'neighbors': neighbors_json, 'monolayer': monolayer_json, 'feature': feature}
+    data ={'dim': {'height': s.data.shape[0], 'width' : s.data.shape[1], 'separation': max_dist, 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}, 'neighbors': neighbors_json, 'feature': feature}
 
     return render_template('chart_first.html', data = data, form=form, tables =tables, image =  image, list_sublattice_a = str(list_sublattice_a))
-
-
-@app.route('/processed/<dist>', methods=['GET', 'POST'])
-def chart(dist):
-
-    # form = OptionsForm1()
-    # print("height")
-    # print(dist)
-    #
-    # #form info
-    # image_string = form.image.data
-    # plane_first_sublattice = form.plane_first_sublattice.data# # separation = form.separation.data
-    # form.max_dist.data = dist
-    # max_dist = float(dist)
-    # print(max_dist)
-    #
-    #
-    #
-    # pre_process = form.pre_process.data
-    # subtract_image = form.subtract_image.data
-    #
-    # scale_image = form.scale_image.data
-    # pixels_nanometer = float(form.pixels_nanometer.data)
-    #
-    # max_dist = max_dist*pixels_nanometer
-    # print(max_dist)
-    #
-    # s=hs.load(os.path.join(app.static_folder, "images/", image_string))
-    # image = {'image': "static/images/" + image_string}
-    # print("height")
-    # print(s.data.shape[0])
-    # print("weight")
-    # print(s.data.shape[1])
-    #
-    # feature, list_sublattice_a = csv_to_json2(image_string, max_dist, plane_first_sublattice, plane_second_sublattice, pixels_nanometer, pre_process, subtract_image, step = "step_2")
-    #
-    #
-    # monolayer= pd.read_csv(os.path.join(app.static_folder, 'data_json/monolayer_test.csv'))
-    # neighbors = pd.read_csv(os.path.join(app.static_folder, 'data_json/neighbors_test.csv'), engine='python')
-    #
-    # tables = {}
-    # #have the options only be the planes available for sublattices 0 and 1
-    # tables["all_zones"] = neighbors['combined'].drop_duplicates().tolist()
-    # tables["all_sublattices"] = neighbors['sublattice_df'].drop_duplicates().tolist()
-    #
-    # neighbors_json = json.loads(neighbors.to_json(orient='records'))
-    # monolayer_json = json.loads(monolayer.to_json(orient='records'))
-    #
-    # data ={'dim': {'height': s.data.shape[0], 'width' : s.data.shape[1], 'separation': max_dist, 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}, 'neighbors': neighbors_json, 'monolayer': monolayer_json, 'feature': feature}
-    # print(image)
-    # return render_template('chart.html', data = data, form=form, tables =tables, image =  image, list_sublattice_a = str(list_sublattice_a))
-    return render_template('base.html', dist = dist)

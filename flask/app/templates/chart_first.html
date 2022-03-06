@@ -3,143 +3,76 @@
 
 <style>
 
-      #tooltip {
-        position: absolute;
-        width: auto;
-        height: auto;
-        padding: 10px;
-        background-color: white;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        border-radius: 10px;
-        -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-        -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-        pointer-events: none;
-        opacity: .9;
-      }
+.one {
+  width: 800px;
+  float: left;
+  height: 80%;
+  padding-top: 50px;
+  padding-right: 30px;
+  padding-bottom: 50px;
+  padding-left: 80px;
+  }
 
-      #tooltip.hidden {
-        display: none;
-      }
-
-      #tooltip p {
-        margin: 0;
-        font-family: Futura;
-        font-size: 16px;
-        line-height: 20px;
-      }
-
-.rule {
-height: 90%;
-position: absolute;
-border-right: 5px;
-text-align: right;
+.two {
+  width: 500px;
+  height: 100%;
+  margin-left: 810px;
+  padding-top: 50px;
+  padding-right: 30px;
+  padding-bottom: 50px;
+  padding-left: 80px;
 }
 
-span {
-    margin-right: 0.5em;
-}
-
-
-  .one {
-      width: 800px;
-      float: left;
-      height: 80%;
-      padding-top: 50px;
-       padding-right: 30px;
-       padding-bottom: 50px;
-       padding-left: 80px;
-    }
-
-    .two {
-        width: 500px;
-        height: 100%;
-        margin-left: 810px;
-        padding-top: 50px;
-       padding-right: 30px;
-       padding-bottom: 50px;
-       padding-left: 80px;
-      }
-
-  #inner {
-    width: 50%;
-    margin: 0 auto;
+#inner {
+  width: 50%;
+  margin: 0 auto;
 
 .three {
-    position: relative;
-    float: right;
-  }
-</style>
+  position: relative;
+  float: right;
+}
 
-<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-      <body>
+</style>
+<body>
         <div>
             <div class="one">
-                <form action="" method="post" novalidate>
-                    {{ form.hidden_tag() }}
-                    <p>
-                        {{ wtf.quick_form(form)}}
-                    </p>
-                </form>
-                <div>
-
-                    <div id="line_chart"></div>
-                </div>
-<!--
-                <div id="chart" class="table"></div> -->
-            </div>
-            <!-- <div id="tooltip" class="hidden">
-              <p><strong>Values</strong></p>
-              <p><span id="value">100</span></p>
-            </div> -->
-
-            <div  class = "two">
-              <div id="inner">
-              <p>Select Zone</p>
-                <select id="selectPlaneSublattice"></select> <br>
-                  <p>Select Feature</p>
-                <select id="selectFeature"></select> <br>
-
-                <p>Select Zones to View</p>
-                <select multiple id="multiSelectPlane"></select>
-                </div>
-
-              <div id="map" ></div>
+              <form action="" method="post" novalidate>
+                  {{ form.hidden_tag() }}
+                  <p>
+                      {{ wtf.quick_form(form)}}
+                  </p>
+              </form>
+              <div>
+                  <div id="line_chart"></div>
               </div>
             </div>
-
-
-
-      </body>
+            <div class = "two">
+                <div id="inner">
+                  <p>Select Zone</p>
+                    <select id="selectPlaneSublattice"></select> <br>
+                  <p>Select Feature</p>
+                    <select id="selectFeature"></select> <br>
+                  <p>Select Zones to View</p>
+                    <select multiple id="multiSelectPlane"></select>
+                </div>
+                <div id="map" >
+                </div>
+            </div>
+          </div>
+</body>
 
     <script>
 
-    var image = "{{ image.image}}";
-    var data = {{ data|  tojson}};
-    var zone_all = {{ tables.all_zones| tojson }};
-
-    var getUrl = window.location;
-    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
-    image  = baseUrl + image
-
-    console.log(image)
-
-    var sublattice_all = {{ tables.all_sublattices| tojson }};
+      var image = "{{ image.image}}";
+      var data = {{ data|  tojson}};
+      var zone_all = {{ tables.all_zones| tojson }};
+      var getUrl = window.location;
+      var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
+      image  = baseUrl + image
+      var sublattice_all = {{ tables.all_sublattices| tojson }};
     </script>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../static/datatables/jquery.datatables.min.css">
-    <script type="text/javascript" charset="utf8" src="../static/datatables/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../static/datatables/Buttons-1.6.2/css/buttons.dataTables.min.css">
-    <script type="text/javascript" charset="utf8" src ="../static/datatables/Buttons-1.6.2/js/datatables.buttons.min.js"></script>
-    <script type="text/javascript" charset="utf8" src ="../static/datatables/Buttons-1.6.2/js/buttons.html5.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../static/datatables/Select-1.3.1/css/select.dataTables.min.css">
-    <script type="text/javascript" charset="utf8" src ="../static/datatables/Select-1.3.1/js/dataTables.select.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css"/>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/line_chart.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/atom_map.js') }}"></script>

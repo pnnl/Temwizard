@@ -2,23 +2,23 @@
 {% block content %}
 <style>
   .one {
-      width: 500px;
-      float: left;
-      height: 80%;
-      padding-top: 50px;
-       padding-right: 30px;
-       padding-bottom: 50px;
-       padding-left: 80px;
+    width: 500px;
+    float: left;
+    height: 80%;
+    padding-top: 50px;
+    padding-right: 30px;
+    padding-bottom: 50px;
+    padding-left: 80px;
     }
 
     .two {
-        width: 500px;
-        height: 100%;
-        margin-left: 510px;
-        padding-top: 50px;
-       padding-right: 30px;
-       padding-bottom: 50px;
-       padding-left: 80px;
+    width: 500px;
+    height: 100%;
+    margin-left: 510px;
+    padding-top: 50px;
+    padding-right: 30px;
+    padding-bottom: 50px;
+    padding-left: 80px;
       }
 
   #inner {
@@ -26,12 +26,12 @@
     margin: 0 auto;
   }
 </style>
+
 <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 <body>
   <div>
       <div class="one">
           <form action="" method="post" novalidate>
-
               <p> Fill in step 6. Select the zone Sublattice C is in between</p>
               {{ form.hidden_tag() }}
               <p>
@@ -40,43 +40,32 @@
           </form>
           <button id="send_data">Proceed to Step 4: Find Sublattice C</button>
           <button id="send_data2">Or Proceed to Step 6: View full results</button>
-
           </div>
 
       <div  class = "two">
-          <div id="inner">
+      <div id="inner">
           <p>Select Zones to View</p>
         <select multiple id="multiSelectPlane"></select>
-        </div>
-
-
+      </div>
         <div id="map" ></div>
       </div>
-
-
   </div>
 
 </body>
 
     <script>
-    var image = "{{ image.image}}";
-    var data = {{ data|  tojson}};
-    var zone_all = {{ tables.all_zones| tojson }};
-    console.log(zone_all)
+      var image = "{{ image.image}}";
+      var data = {{ data|  tojson}};
+      var zone_all = {{ tables.all_zones| tojson }};
 
-    var getUrl = window.location;
-    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
-    image  = baseUrl + image
-
+      var getUrl = window.location;
+      var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
+      image  = baseUrl + image
     </script>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
-
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/atom_map_sublattice.js') }}"></script>
     <script>
-
-
-
     $(document).ready(function () {
       $("#send_data").on("click", function() {
         window.location.href = '/fourth_sublattice?image=' + document.getElementById('image').value  +
@@ -90,9 +79,6 @@
     </script>
 
     <script>
-
-
-
     $(document).ready(function () {
       $("#send_data2").on("click", function() {
         window.location.href = '/fifth_sublattice?image=' + document.getElementById('image').value  +

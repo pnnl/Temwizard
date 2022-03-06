@@ -27,6 +27,7 @@ from math import acos
 from math import sqrt
 from math import pi
 from math import atan2
+
 from shapely.geometry import Polygon
 
 
@@ -276,14 +277,10 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
     rotation_ellipticity_atom = []
     sublattice_atom =[]
 
-
     #this is manually done twice for the two sublattice, but really should be a function that goes through the sublattices
     for current_sublattice_i in range(len(atom_lattice.sublattice_list)):
         current_sublattice= atom_lattice.sublattice_list[current_sublattice_i ]
-
-
         x_position_atom.extend(current_sublattice.x_position.tolist())
-
         y_position_atom.extend(current_sublattice.y_position.tolist())
         sigma_x_atom.extend(current_sublattice.sigma_x.tolist())
         sigma_y_atom.extend(current_sublattice.sigma_y.tolist())
@@ -299,7 +296,6 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
             # #example list: [(-1.59, 87.37), (87.74, 0.92), (86.14, 88.27), (89.33, -86.46)]
             current_zone = current_sublattice.zones_axis_average_distances[current_zone_i]
 
-
             # #Get distance between each atom and the next monolayer given by the zone_vector.
             # #Returns the x- and y-position, and the distance between the atom and the monolayer.
             # #The position is set between the atom and the monolayer.
@@ -314,10 +310,6 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
             zone_monolayer = [current_zone] * len(distance_next_monolayer[0])
             sublattice_monolayer_df.extend(sublattice_monolayer)
             zone_monolayer_df.extend(zone_monolayer)
-
-            # sublattice_A = atom_lattice.sublattice_list[0]
-
-            # current_plane_list = sublattice_A.atom_planes_by_zone_vector[current_zone]
 
             current_plane_list = current_sublattice.atom_planes_by_zone_vector[current_zone]
 
@@ -373,12 +365,8 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
                 sublattice_df.extend(sublattice_i)
                 plane_position_df.extend(plane_position)
 
-
-                #print(current_zone)
-
      #stored info per atom in list initially - will be stored in dataframe at the end
     monolayer_df = pd.DataFrame(list(zip(x_distance_next_monolayer, y_distance_next_monolayer, length_distance_next_monolayer, zone_monolayer_df, sublattice_monolayer_df)),  columns =['x_monolayer', 'y_monolayer', 'length_monolayer', 'zone_monolayer_df', 'sublattice_monolayer_df'])
-
 
     neighbors = pd.DataFrame(list(zip(distance_next_df, distance_prev_df, x_position_df, y_position_df, x_prev_df, y_prev_df, x_next_df, y_next_df, plane_df, zone_df, sublattice_df, plane_position_df)),  columns =['distance_next', "distance_prev", 'x_position', 'y_position', 'x_prev', 'y_prev', 'x_next', 'y_next', 'plane', 'zone', 'sublattice_df', 'plane_position_df'])
 
@@ -405,25 +393,16 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
     #the average of each indiviual line
     neighbors['avg_y_combined'] = neighbors.groupby(['combined_all'])['y_position'].transform('mean')
 
-
-    #neighbors['ind_dist_from_avg_line'] = neighbors['avg_y_combined'] - neighbors['y_position']
-
     #the average of each line with two lines combined
     neighbors['avg_y_combined2'] = neighbors.groupby(['combined_all2'])['y_position'].transform('mean')
     neighbors['dev_y_combined'] = (neighbors['y_position'] - neighbors['avg_y_combined2'])**2
     neighbors['stddev_y_combined'] = neighbors.groupby(['combined_all2'])['dev_y_combined'].transform('mean')**(1/2)
-    print("std")
-    print(neighbors['stddev_y_combined'] )
     neighbors['dist_from_avg_line'] = neighbors['avg_y_combined'] - neighbors['avg_y_combined2']
 
     #neighbors["combined"] = neighbors[['zone', 'sublattice_df']].apply(lambda row: ''.join(row.values.astype(str)), axis=1)
     #neighbors["combined"] = neighbors[['zone', 'sublattice_df']].apply(lambda row: ''.join(row.values.astype(str)), axis=1)
 
     atoms = pd.DataFrame(list(zip(x_position_atom, y_position_atom, sigma_x_atom, sigma_y_atom, ellipticity_atom, rotation_ellipticity_atom, sublattice_atom)),  columns =['x_position', 'y_position', 'sigma_x', 'sigma_y', 'ellipticity', 'rotation_ellipticity', 'sublattice_atom'])
-    from math import acos
-    from math import sqrt
-    from math import pi
-    from math import atan2
 
     def length(v):
          return sqrt(v[0]**2+v[1]**2)
@@ -444,25 +423,18 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
          #angle = min(((360 - angle)), (angle))
          return facingAngle
 
-
-
     def four_neighbors(x):
-
         #find closest atoms in the opposite lattice
         current_sl =x["sublattice_atom"]
         current_atoms_df = atoms[atoms["sublattice_atom"] != current_sl]
 
         xy = current_atoms_df[['x_position', 'y_position']].drop_duplicates()
-
         xy = xy.to_numpy()
 
         tree = spatial.KDTree(xy)
         pts = np.array([[x['x_position'], x['y_position']]])
         result = tree.query(pts, k =4)
         index_result = result[1][0]
-
-
-
 
         x["neighbor_1x"] = xy[index_result[0]][0]
         x["neighbor_2x"] = xy[index_result[1]][0]
@@ -476,7 +448,6 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
 
         x_coords = [x["neighbor_1x"], x["neighbor_2x"], x["neighbor_3x"],  x["neighbor_4x"]  ]
         y_coords = [x["neighbor_1y"], x["neighbor_2y"], x["neighbor_3y"],  x["neighbor_4y"]  ]
-
 
         x_min = min(x_coords)
         y_min = min(y_coords)
@@ -500,8 +471,8 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
         coords = merge(x_coords, y_coords)
         coords.sort(key=lambda x: math.atan2(x[1] - x_center, x[0] - y_center))
         polygon = Polygon(coords)
-        x["area"] =polygon.area
 
+        x["area"] =polygon.area
 
         x["neighbor_1x"] = coords[0][0] + x_min
         x["neighbor_2x"] = coords[1][0] + x_min
@@ -513,7 +484,6 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
         x["neighbor_3y"] = coords[2][1] + y_min
         x["neighbor_4y"] = coords[3][1] + y_min
 
-
         x["neighbor_1x_zero"] = coords[0][0]
         x["neighbor_2x_zero"] = coords[1][0]
         x["neighbor_3x_zero"] = coords[2][0]
@@ -524,12 +494,7 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
         x["neighbor_3y_zero"] = coords[2][1]
         x["neighbor_4y_zero"] = coords[3][1]
 
-
-
-
         x['ratio_aspect'] = (max(y_coords) - min(y_coords))/(max(x_coords) - min(y_coords))
-
-
 
         #get center
         list_points = []
@@ -541,8 +506,8 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
         center = numpy_points.mean(axis=0)
         x["center_neighborsx"] =  center[0]
         x["center_neighborsy"] =  center[1]
-
         x['inner_angle_center_atom']= getAngleBetweenPoints(x['x_position'], x['y_position'], center[0], center[1])
+
         length_arrow = 10
 
         x['x_dist_center_atom']=   center[0] -  x['x_position']
@@ -552,17 +517,15 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
         x['arrow_y'] = x['y_position'] + length_arrow*(center[1] - x['y_position'] )
 
         filter_features_list = ["magnitude", "inner_angle_center_atom", "arrow_x", "arrow_y", "x_position", "y_position", "ratio_aspect", "area"]
+
         def check(list1, val):
            return(sum([x > val for x in list1]) == 2 or sum([x < val for x in list1]) == 2)
 
         for filtered_feature in filter_features_list:
             if x["magnitude"] < (max_dist/4) and check([x["neighbor_1x"], x["neighbor_2x"], x["neighbor_3x"], x["neighbor_4x"]], x['x_position']) and check([x["neighbor_1y"], x["neighbor_2y"], x["neighbor_3y"], x["neighbor_4y"]], x['y_position']):
-
                 x["filtered_" + filtered_feature] = x[filtered_feature]
             else:
                 x["filtered_" + filtered_feature] = None
-
-
 
         x["filtered_magnitude"] = x["magnitude"] if x["magnitude"] < (max_dist/4) else None
         x["filtered_inner_angle_center_atom"] = x["inner_angle_center_atom"] if x["magnitude"] < (max_dist/4) else None
@@ -572,40 +535,28 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
         x["filtered_x_position"] = x["x_position"] if x["magnitude"] < (max_dist/4) else None
         x["filtered_y_position"] = x["y_position"] if x["magnitude"] < (max_dist/4) else None
 
-
         if .7 <(max(y_coords) - min(y_coords))/(max(x_coords) - min(y_coords)) < 1.3 :
             x['filtered_ratio_aspect'] = (max(y_coords) - min(y_coords))/(max(x_coords) - min(y_coords))
         else:
             x['filtered_ratio_aspect'] = None
 
-
-
-       #"neighbor_1x_zero", "neighbor_2x_zero", "neighbor_3x_zero", "neighbor_4x_zero", "neighbor_1y_zero", "neighbor_2y_zero", "neighbor_3y_zero", "neighbor_4y_zero"
-
         if check([x["neighbor_1x"], x["neighbor_2x"], x["neighbor_3x"], x["neighbor_4x"]], x['x_position']) or check([x["neighbor_1y"], x["neighbor_2y"], x["neighbor_3y"], x["neighbor_4y"]], x['y_position']):
             polygon = Polygon(coords)
             x["area"] =polygon.area
         else:
-
             polygon = Polygon(coords)
             x["area"] = None
-
         return x
 
     def horizonal_angle(x):
-
         x['horizontal_angle'] = getAngleBetweenPoints(x['x_position'], x['y_position'], x['x_next'], x['y_next'])
-
         x['center_horizontal_angle']= x['inner_angle_center_atom'] - x['horizontal_angle']
         return x
 
-
-
     if step == "step_5":
         atoms = atoms.apply(four_neighbors, axis=1)
-
-
         neighbors = pd.merge(neighbors, atoms,  how='left', left_on=['x_position', 'y_position'], right_on = ['x_position', 'y_position'])
+
     if step == "step_5":
         neighbors = neighbors.apply(horizonal_angle, axis =1)
         neighbors[['area']] = neighbors[['area']].div(pixels_nanometer**2)
@@ -614,8 +565,6 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
     combined_count = neighbors[['combined', 'combined_all']].value_counts(['combined_all']).reset_index(name='combined count')
 
     neighbors = pd.merge(neighbors, combined_count, on=['combined_all'], how='left')
-
-
 
     # def filter_area(row):
     #     if row["area"] < (max_dist * 1.5/pixels_nanometer )**2 and (max_dist/pixels_nanometer * .7)**2 < row["area"]:
@@ -626,15 +575,11 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
     #     return val
     # neighbors['filtered_area'] = neighbors.apply(filter_area, axis = 1)
 
-    #neighbors = neighbors[np.logical_and(neighbors["plane_position_df"] != 0, neighbors["plane_position_df"] != (neighbors["('combined', 'count')"] - 1))]
-    # neighbors[[ 'distance_next', 'distance_prev', 'x_position', 'y_position', 'x_prev', 'y_prev', 'x_next', 'y_next', 'plane', 'zone', 'sublattice_df', 'plane_position_df', 'combined_all', 'combined', 'sigma_x', 'sigma_y', 'ellipticity', 'rotation_ellipticity', 'sublattice_atom', 'neighbor_1x', 'neighbor_2x', 'neighbor_3x', 'neighbor_4x', 'neighbor_1y', 'neighbor_2y', 'neighbor_3y', 'neighbor_4y', 'coords', 'area', 'ratio_aspect', 'center_neighborsx', 'center_neighborsy', 'inner_angle_center_atom', 'x_dist_center_atom', 'y_dist_center_atom', 'magnitude', 'arrow_x', 'arrow_y', 'filtered_magnitude', 'filtered_inner_angle_center_atom', 'filtered_arrow_x', 'filtered_arrow_y', 'filtered_x_position', 'filtered_y_position', 'horizontal_angle', 'center_horizontal_angle', ('combined', 'count')]].div(2)
-
     not_features = set(['center_horizontal_angle',  'filtered_arrow_x', 'filtered_arrow_y', 'combined_all', 'sublattice_df', 'plane_position_df', ('combined', 'count'), 'horizontal_angle', 'sublattice_atom', 'coords', 'combined', 'zone', 'plane',  'x_position', 'y_position', 'x_prev', 'y_prev', 'x_next', 'y_next',  'sigma_x', 'sigma_y',  'rotation_ellipticity',  'neighbor_1x', 'neighbor_2x', 'neighbor_3x', 'neighbor_4x', 'neighbor_1y', 'neighbor_2y', 'neighbor_3y', 'neighbor_4y',  'center_neighborsx', 'center_neighborsy',  'x_dist_center_atom', 'y_dist_center_atom',  'arrow_x', 'arrow_y',  'filtered_x_position', 'filtered_y_position', 'distance_next', 'ratio_aspect', 'inner_angle_center_atom', 'magnitude', 'area', 'distance_prev', "neighbor_1x_zero", "neighbor_2x_zero", "neighbor_3x_zero", "neighbor_4x_zero", "neighbor_1y_zero", "neighbor_2y_zero", "neighbor_3y_zero", "neighbor_4y_zero"
          ])
 
     #do_not_pixels_nanometer = set(['center_horizontal_angle',  'area', 'filtered_area', 'combined_all', 'sublattice_df', 'plane_position_df', ('combined', 'count'), 'ellipticity', 'rotation_ellipticity', 'horizontal_angle', 'sublattice_atom', 'ratio_aspect', 'filtered_ratio_aspect', 'filtered_inner_angle_center_atom', 'inner_angle_center_atom', 'coords', 'combined', 'zone', 'plane',  'rotation_ellipticity', 'center_horizontal_angle', "('combined', 'count')"])
     do_not_pixels_nanometer = set(['center_horizontal_angle',  'area', 'filtered_area', 'combined_all', 'sublattice_df', 'combined2', 'combined_all2', 'plane_position_df', ('combined', 'count'), 'ellipticity', 'rotation_ellipticity', 'horizontal_angle', 'sublattice_atom', 'ratio_aspect', 'filtered_ratio_aspect', 'filtered_inner_angle_center_atom', 'inner_angle_center_atom', 'coords', 'combined', 'zone', 'zone2', 'plane',  'rotation_ellipticity', 'center_horizontal_angle', "('combined', 'count')", "intensity", "new_column"])
-
 
     all_columns = set(neighbors.columns)
 
@@ -646,31 +591,6 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
 
     neighbors[pixels_nanometer_features] = neighbors[pixels_nanometer_features].div(pixels_nanometer)
 
-
-
-    monolayer_df.to_csv("app/static/data_json/monolayer_test.csv")
-
     neighbors.to_csv("app/static/data_json/neighbors_test.csv")
 
-
-
     return features, list_sublattice_a
-
-#
-# #image="adf1.jpg"
-# orig_image = "dumbbell1.jpg"
-# plane_first_sublattice = 2
-#
-# replace_hdf5 = False
-# pre_process = False
-# subtract_image = False
-# pixels_nanometer = 100
-# max_dist = .3 * pixels_nanometer
-# def main():
-#     # csv_to_json(image, 0)
-#     # add_plane_data(image, neighbors, atoms, plane, monolayer, 0)
-#     csv_to_json2(orig_image, max_dist, plane_first_sublattice, replace_hdf5, pixels_nanometer, pre_process, subtract_image)
-#
-#
-# if __name__ == "__main__":
-#     main()

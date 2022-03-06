@@ -2,23 +2,23 @@
 {% block content %}
 <style>
 .one {
-    width: 500px;
-    float: left;
-    height: 80%;
-    padding-top: 50px;
-   padding-right: 30px;
-   padding-bottom: 50px;
-   padding-left: 80px;
+  width: 500px;
+  float: left;
+  height: 80%;
+  padding-top: 50px;
+  padding-right: 30px;
+  padding-bottom: 50px;
+  padding-left: 80px;
   }
 
   .two {
-      width: 500px;
-      height: 100%;
-      margin-left: 510px;
-      padding-top: 50px;
-     padding-right: 30px;
-     padding-bottom: 50px;
-     padding-left: 80px;
+    width: 500px;
+    height: 100%;
+    margin-left: 510px;
+    padding-top: 50px;
+    padding-right: 30px;
+    padding-bottom: 50px;
+    padding-left: 80px;
     }
 
 #inner {
@@ -33,47 +33,36 @@
 
       <div class="one">
           <form action="" method="post" novalidate>
-
               <p> Fill in step 5. Select the zone Sublattice B is in between</p>
               {{ form.hidden_tag() }}
               <p>
                   {{ wtf.quick_form(form)}}
               </p>
           </form>
-
-
           <button id="send_data">Proceed to Step 3: Find Sublattice B</button>
-          </div>
+        </div>
 
       <div  class = "two">
           <div id="inner">
           <p>Select Zones to View</p>
                   <select multiple id="multiSelectPlane"></select>
           </div>
-
         <div id="map" ></div>
       </div>
-
-
   </div>
 
 </body>
-
     <script>
-    var image = "{{ image.image}}";
-    var data = {{ data|  tojson}};
-    var zone_all = {{ tables.all_zones| tojson }};
-    console.log(zone_all)
+        var image = "{{ image.image}}";
+        var data = {{ data|  tojson}};
+        var zone_all = {{ tables.all_zones| tojson }};
 
-    var getUrl = window.location;
-    var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
-    image  = baseUrl + image
-    console.log(image)
-
+        var getUrl = window.location;
+        var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
+        image  = baseUrl + image
     </script>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
-
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/atom_map_sublattice.js') }}"></script>
     <script>
 

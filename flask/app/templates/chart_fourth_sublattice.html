@@ -1,32 +1,33 @@
 {% extends "layout.html" %}
 {% block content %}
 <style>
-  .one {
-      width: 500px;
-      float: left;
-      height: 80%;
-      padding-top: 50px;
-       padding-right: 30px;
-       padding-bottom: 50px;
-       padding-left: 80px;
+.one {
+    width: 500px;
+    float: left;
+    height: 80%;
+    padding-top: 50px;
+    padding-right: 30px;
+    padding-bottom: 50px;
+    padding-left: 80px;
+  }
+
+  .two {
+    width: 500px;
+    height: 100%;
+    margin-left: 510px;
+    padding-top: 50px;
+    padding-right: 30px;
+    padding-bottom: 50px;
+    padding-left: 80px;
     }
 
-    .two {
-        width: 500px;
-        height: 100%;
-        margin-left: 510px;
-        padding-top: 50px;
-       padding-right: 30px;
-       padding-bottom: 50px;
-       padding-left: 80px;
-      }
+#inner {
+  width: 50%;
+  margin: 0 auto;
+}
 
-  #inner {
-    width: 50%;
-    margin: 0 auto;
-  }
 </style>
-<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+
 <body>
   <div>
       <div class="one">
@@ -45,34 +46,25 @@
             <p>Select Zones to View</p>
           <select multiple id="multiSelectPlane"></select>
           </div>
-
-
         <div id="map" ></div>
       </div>
-
-
   </div>
-
 </body>
 
     <script>
     var image = "{{ image.image}}";
     var data = {{ data|  tojson}};
     var zone_all = {{ tables.all_zones| tojson }};
-    console.log(zone_all)
 
     var getUrl = window.location;
     var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
     image  = baseUrl + image
-
     </script>
 
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+      <script src="https://d3js.org/d3.v5.min.js"></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='javascript/atom_map_sublattice.js') }}"></script>
 
-    <script type="text/javascript" src="{{ url_for('static', filename='javascript/atom_map_sublattice.js') }}"></script>
     <script>
-
-
 
     $(document).ready(function () {
       $("#send_data").on("click", function() {
