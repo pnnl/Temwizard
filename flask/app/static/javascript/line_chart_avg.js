@@ -1,6 +1,5 @@
 var neighbors = data.neighbors
 var feature = data.feature
-console.log(feature)
 
 var scale_image = data.dim.scale_image
 var height = data.dim.height*scale_image
@@ -12,7 +11,7 @@ var margin = {top: 50, right: 200, bottom: 30, left: 60},
     //height = 400 - margin.top - margin.bottom;
 
 // append the svg2 object to the body of the page
-var svg2 = d3.select("#line_chart")
+var svg2 = d3.select("#line_chart_avg")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -22,14 +21,13 @@ var svg2 = d3.select("#line_chart")
 
 
 // List of groups (here I have one group per column)
-var allGroup = d3.map(neighbors, function(d){return(d.combined)}).keys()
+var allGroup = d3.map(neighbors, function(d){return(d.zone_horizontal)}).keys()
 
-var neighbors_filter = neighbors.filter(function(d){return d.combined==allGroup[0]})
+var neighbors_filter = neighbors.filter(function(d){return d.zone_horizontal==allGroup[0]})
 neighbors_filter.sort(function(a, b) {
       return d3.ascending(a.y_position, b.y_position)
     })
 
-console.log(neighbors_filter)
 // add the options to the button
 d3.select("#selectPlaneSublattice")
   .selectAll('myOptions')
@@ -53,7 +51,7 @@ var selectedGroup_value = d3.select('#selectPlaneSublattice').property("value")
 var selectedColumn = d3.select("#selectFeature").property("value")
 // group the data: I want to draw one line per group
 var sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
-  .key(function(d) { return d.combined2;})
+  .key(function(d) { return d.zone;})
   .entries(neighbors_filter);
 
 // Add X axis --> it is a date format
@@ -119,18 +117,14 @@ svg2.selectAll("mylabels")
                   var selectedGroup_value = d3.select('#selectPlaneSublattice').property("value")
                   var selectedColumn = d3.select("#selectFeature").property("value")
 
-                  console.log(neighbors)
-
-                  neighbors_filter = neighbors.filter(function(d){return d.combined==selectedGroup_value & d[selectedColumn]!=null & d['plane_position_df'] ==0})
-                  console.log("neighbor filter")
-                  console.log(neighbors_filter )
+                  neighbors_filter = neighbors.filter(function(d){return d.zone_horizontal==selectedGroup_value & d[selectedColumn]!=null & d['plane_position_df'] ==0})
 
                   neighbors_filter.sort(function(a, b) {
                         return d3.ascending(a.y_position, b.y_position)
                       })
-                  console.log(neighbors_filter)
+
                   sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
-                    .key(function(d) { return d.combined2;})
+                    .key(function(d) { return d.zone;})
                     .entries(neighbors_filter);
 
 
@@ -138,12 +132,8 @@ svg2.selectAll("mylabels")
                   //y.domain([0, d3.max(neighbors_filter, function(d) { return +d.y_position; })])
 
                   // Add Y axis
-                  console.log(selectedColumn)
                   x.domain([d3.min(neighbors_filter, function(d) { return +d[selectedColumn]; }), d3.max(neighbors_filter, function(d) { return +d[selectedColumn]; })])
                   //x.domain([-.02, .02])
-                  console.log(sumstat)
-                  console.log(x.domain())
-
 
                   yAxis.transition().duration(1000).call(d3.axisLeft(y).ticks(40))
                   xAxis.transition().duration(1000).call(d3.axisBottom(x).ticks(5))
@@ -184,15 +174,35 @@ svg2.selectAll("mylabels")
                                          .attr('class', 'lineAtoms2')
 
                     lineAtomEnter
-                             .attr("x1", function (d) { return x(d[selectedColumn] + d.stddev_y_combined); })
+                             .attr("x1", function (d) { return x(d[selectedColumn] + d.stddev_y_horizontal); })
                              .attr("y1", function (d) { return y(d.y_position); })
-                             .attr("x2", function (d) { return x(d[selectedColumn] - d.stddev_y_combined); })
+                             .attr("x2", function (d) { return x(d[selectedColumn] - d.stddev_y_horizontal); })
                              .attr("y2", function (d) { return y(d.y_position); })
                              .attr("stroke-width", 1)
                              .attr('stroke', "black")
 
 
                           lineAtom.exit().remove();
+
+                           //line connecting each atom to each other depending on the place the user selects
+                           var lineAtom = svg2
+                                            .selectAll("line.lineAtoms2")
+                                            .data(neighbors_filter)
+                        var lineAtomEnter = lineAtom
+                                             .enter()
+                                             .append("line")
+                                             .attr('class', 'lineAtoms2')
+
+                        lineAtomEnter
+                                 .attr("x1", function (d) { return x(d[selectedColumn] + d.stddev_y_horizontal); })
+                                 .attr("y1", function (d) { return y(d.y_position); })
+                                 .attr("x2", function (d) { return x(d[selectedColumn] - d.stddev_y_horizontal); })
+                                 .attr("y2", function (d) { return y(d.y_position); })
+                                 .attr("stroke-width", 1)
+                                 .attr('stroke', "black")
+
+
+                              lineAtom.exit().remove();
                     // //dot for center of atom
                     // var atom_dot = svg2.append('g')
                     //   .selectAll("dot")

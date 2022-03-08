@@ -27,15 +27,23 @@ var y_image = d3.scaleLinear()
   .range([ 0, height*pixels_nanometer*scale_image ]);
 
 
-  // Add X axis --> it is a date format
-  var x_image3 = d3.scaleLinear()
-    .domain([0, 2*width ])
-    .range([ 0, 2*width*pixels_nanometer*2.5]);
+// Add X axis --> it is a date format
+var x_image3 = d3.scaleLinear()
+  .domain([0, 2*width ])
+  .range([ 0, 2*width*pixels_nanometer*2.5]);
 
-  // Add Y axis
-  var y_image3 = d3.scaleLinear()
-    .domain([0, height  ])
-    .range([ 0, height*pixels_nanometer*2.5 ]);
+// Add Y axis
+var y_image3 = d3.scaleLinear()
+  .domain([0, height  ])
+  .range([ 0, height*pixels_nanometer*2.5 ]);
+
+var pix_to_nan =  d3.scaleLinear()
+  .domain([0, height*pixels_nanometer*scale_image])
+  .range([ 0, height]);
+
+var scaled_to_pix =  d3.scaleLinear()
+  .domain([0, height*scale_image])
+  .range([ 0, height]);
 
 //currently not using monolayers
 var monolayer = data.monolayer
@@ -74,7 +82,7 @@ var selectedColumn = d3.select("#selectFeature").property("value")
 var selectedGroup_value = d3.select('#selectPlaneSublattice').property("value")
 var selectedGroup = d3.select('#selectPlaneSublattice')
 
-neighbors_filter = neighbors.filter(function(d){return d.combined==selectedGroup_value})
+neighbors_filter = neighbors.filter(function(d){return d.zone_horizontal==selectedGroup_value})
 
 //add data to the user-select bars
 multiSelectPlane.selectAll("option")
@@ -91,7 +99,7 @@ restore_boolean = true
 
 //initially filtered_neightbors only includes the data with the 2nd listed plane
 var selectedGroup_value = d3.select('#selectPlaneSublattice').property("value")
-neighbors_filter = neighbors.filter(function(d){return d.combined==selectedGroup_value && d[selectedColumn] != null})
+neighbors_filter = neighbors.filter(function(d){return d.zone_horizontal==selectedGroup_value && d[selectedColumn] != null})
 
 
 //var shades=d3.scaleQuantile().range(['#f7fbff', '#deebf7', '#c6dbef', '#9ecae1', '#6baed6', '#4292c6', '#2171b5', '#08519c', '#08306b'])
@@ -103,7 +111,7 @@ var shades=d3.scaleLinear()
 //               .domain([d3.min(neighbors_filter, function(d) { return +d[selectedColumn]}),d3.max(neighbors_filter, function(d) { return +d[selectedColumn] })])
 
 var group_names = neighbors.map(function(d){ return d.sublattice_df }) // list of group names
-console.log(group_names)
+
 var cat_color = d3.scaleOrdinal()
 .domain(group_names)
 .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
@@ -126,7 +134,7 @@ function update_atom_line(){
         options.push(option.value)
         }
         var neighbors_filter = neighbors.filter(function(d){
-                return options.includes(d.combined);
+                return options.includes(d.zone_horizontal);
                })
 
 
@@ -135,12 +143,8 @@ function update_atom_line(){
                    })
 
                sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
-                 .key(function(d) { return d.combined_all;})
+                 .key(function(d) { return d.zone_plane_horizontal;})
                  .entries(neighbors_filter);
-
-                 console.log("sumstat")
-                 console.log(sumstat)
-
                d3.selectAll("path.lines2").remove()
 
 
@@ -150,11 +154,10 @@ function update_atom_line(){
                        .append("path")
                        .attr("class", "lines2")
 
-               contentEnter2
+              contentEnter2
                  .attr("stroke-width", .5)
                  .attr('stroke', "white")
-
-        .attr("fill", "none")
+              .attr("fill", "none")
                  .attr("d", function(d){
                    return d3.line()
                      .x(function(d) { return x_image(d.x_position); })
@@ -163,6 +166,25 @@ function update_atom_line(){
                  })
                  content2.exit().remove();
 
+            d3.selectAll("line.widthLine").remove()
+             var widthLine = svg
+                   .selectAll("line.widthLine")
+                   .data(neighbors_filter)
+
+             var widthLineEnter = widthLine
+                   .enter()
+                   .append("line")
+                   .attr("class", "widthLine")
+
+             widthLineEnter
+                 .attr("x1", function (d) { return x_image(d.left_x); })
+                 .attr("y1", function (d) { return y_image(d.left_y); })
+                 .attr("x2", function (d) { return x_image(d.right_x); })
+                 .attr("y2", function (d) { return y_image(d.right_y); })
+                 .attr("stroke-width", 1)
+                 .attr('stroke', "blue")
+
+                widthLine.exit().remove()
 
                              }
 
@@ -182,20 +204,15 @@ function update_atom_min(){
   var selectedColumn = d3.select("#selectFeature").property("value")
   shades.domain([d3.min(neighbors_filter, function(d) { return +d[selectedColumn]}),d3.max(neighbors_filter, function(d) { return +d[selectedColumn] })])
 
-  console.log(selectedColumn)
-  console.log(shades.domain())
   var selectedGroup_value = d3.select('#selectPlaneSublattice').property("value")
 
   title2.text(selectedGroup_value + " by " + selectedColumn);
 
 
   if (selectedGroup_value != "null"){
-    neighbors_filter = neighbors.filter(function(d){return d.combined==selectedGroup_value && d[selectedColumn] != null})}
+    neighbors_filter = neighbors.filter(function(d){return d.zone==selectedGroup_value && d[selectedColumn] != null})}
   else{
     neighbors_filter = neighbors.filter(function(d){return d.plane== null})}
-  console.log(neighbors_filter)
-
-
 
             d3.selectAll("polygon.tiles").remove()
 
@@ -211,9 +228,8 @@ function update_atom_min(){
                 })
                 .attr("stroke","white")
                 .attr("stroke-width", 2)
-                .attr("test", function(d) {return console.log(shades(+d[selectedColumn]))})
                 .style("fill", function(d) {return shades(+d[selectedColumn])})
-                //.attr("test", function(d) {return console.log(zone_all[1].includes(d.combined)) })
+                //.attr("test", function(d) {return console.log(zone_all[1].includes(d.zone)) })
                 .style("fill-opacity", .4)
                 .on("mouseover", function(d) {
 
@@ -234,13 +250,11 @@ function update_atom_min(){
                                                       "<b>" +   "area: " + "</b>" + d.filtered_area + " <br/> "  +
                                                       "<b>" +   "area: " + "</b>" + d.area + " <br/> "  +
                                                       "<b>" +   "ratio_aspect: " + "</b>" + d.ratio_aspect)
-
-
-                                      console.log("MOUSEIN")})
+                                    })
 
 
                                       .on("mouseout", function() {
-                                          console.log("MOUSEIN")
+
                                       })
 
 
@@ -270,7 +284,7 @@ function update_atom_min(){
                   //         div.transition()
                   //             .duration(200)
                   //             .style("opacity", .9);
-                  //         div	.html( d.combined_all)
+                  //         div	.html( d.zone_plane_horizontal)
                   //             .style("left", (d3.event.pageX) + "px")
                   //             .style("top", (d3.event.pageY - 28) + "px");
                   //           }
@@ -309,7 +323,7 @@ function update_plane_selection(){
   var selectedGroup_value = d3.select('#selectPlaneSublattice').property("value")
 
 
-  neighbors_filter = neighbors.filter(function(d){return d.combined==selectedGroup_value && d[selectedColumn] != null})
+  neighbors_filter = neighbors.filter(function(d){return d.zone_horizontal==selectedGroup_value && d[selectedColumn] != null})
 
   var allPolygons = d3.nest()
   .key(function(d) { return d.plane_position_df;})
@@ -406,6 +420,56 @@ d3.select("#selectPolygon").on("change",function(event) {
         update2(3)
 
       })
+
+function drawCircle(x, y, size) {
+       svg.append("circle")
+           .attr('class', 'click-circle')
+           .attr("cx", x)
+           .attr("cy", y)
+
+      .style("fill", "yellow")
+           .attr("r", size);
+
+       selected_squares.push({
+           x: x,
+           y: y
+         })
+   }
+   var n = 1
+   svg.on('click', function() {
+       if (n > 2){
+         var coords = d3.mouse(this);
+         n = 2
+         svg.selectAll("circle.click-circle").remove()
+         selected_squares = new Array();
+         drawCircle(coords[0], coords[1], 5);
+
+   } else if (n ==2) {
+
+  n = n + 1
+  var coords = d3.mouse(this);
+
+  drawCircle(coords[0], coords[1], 5);
+  dist = Math.hypot(selected_squares[0].x-selected_squares[1].x, selected_squares[0].y-selected_squares[1].y)
+  dist = scaled_to_pix(dist)
+  dist_nan = pix_to_nan(dist)
+
+svg.selectAll("text").remove()
+svg.append("text")
+        .attr("x", (x_image(width) / 2))
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .text(Math.round(dist) + " pixels / " + pixels_nanometer  + " = "+ Math.round(dist_nan* 100)/100 + "nm");
+       }
+
+
+     else {
+       n = n + 1
+        var coords = d3.mouse(this);
+        drawCircle(coords[0], coords[1], 5);
+     }
+ });
 // svg.selectAll("polygon")
 //     .data(neighbors)
 //   .enter().append("polygon")

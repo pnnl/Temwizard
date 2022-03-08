@@ -1,6 +1,5 @@
 var neighbors = data.neighbors
 var feature = data.feature
-console.log(feature)
 
 //https://www.d3-graph-gallery.com/graph/line_several_group.html
 // set the dimensions and margins of the graph
@@ -19,27 +18,17 @@ var svg2 = d3.select("#line_chart")
 
 
 // List of groups (here I have one group per column)
-var allGroup = d3.map(neighbors, function(d){return(d.combined)}).keys()
+var allGroup = d3.map(neighbors, function(d){return(d.zone)}).keys()
 
-var neighbors_filter = neighbors.filter(function(d){return d.combined==allGroup[0]})
+var neighbors_filter = neighbors.filter(function(d){return d.zone==allGroup[0]})
 neighbors_filter.sort(function(a, b) {
       return d3.ascending(a.plane_position_df, b.plane_position_df)
     })
 
-console.log(neighbors_filter)
 // add the options to the button
 d3.select("#selectPlaneSublattice")
   .selectAll('myOptions')
   .data(allGroup)
-  .enter()
-  .append('option')
-  .text(function (d) { return d; }) // text showed in the menu
-  .attr("value", function (d) { return d; }) // corresponding value returned by the button
-
-// add the options to the button
-d3.select("#selectFeature")
-  .selectAll('myOptions')
-  .data(feature)
   .enter()
   .append('option')
   .text(function (d) { return d; }) // text showed in the menu
@@ -50,7 +39,7 @@ var selectedGroup_value = d3.select('#selectPlaneSublattice').property("value")
 var selectedColumn = d3.select("#selectFeature").property("value")
 // group the data: I want to draw one line per group
 var sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
-  .key(function(d) { return d.combined_all;})
+  .key(function(d) { return d.zone_plane_horizontal;})
   .entries(neighbors_filter);
 
 // Add X axis --> it is a date format
@@ -115,16 +104,15 @@ svg2.selectAll("mylabels")
                   var selectedGroup_value = d3.select('#selectPlaneSublattice').property("value")
                   var selectedColumn = d3.select("#selectFeature").property("value")
 
-                  console.log(neighbors)
 
-                  neighbors_filter = neighbors.filter(function(d){return d.combined==selectedGroup_value & d[selectedColumn]!=null})
+                  neighbors_filter = neighbors.filter(function(d){return d.zone==selectedGroup_value & d[selectedColumn]!=null})
 
                   neighbors_filter.sort(function(a, b) {
                         return d3.ascending(a.plane_position_df, b.plane_position_df)
                       })
-                  console.log(neighbors_filter)
+
                   sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
-                    .key(function(d) { return d.combined_all;})
+                    .key(function(d) { return d.zone_plane_horizontal;})
                     .entries(neighbors_filter);
 
 
@@ -133,7 +121,6 @@ svg2.selectAll("mylabels")
 
                   // Add Y axis
                   y.domain([d3.min(neighbors_filter, function(d) { return +d[selectedColumn]; }), d3.max(neighbors_filter, function(d) { return +d[selectedColumn]; })])
-                  console.log(sumstat)
 
 
                   yAxis.transition().duration(1000).call(d3.axisLeft(y))

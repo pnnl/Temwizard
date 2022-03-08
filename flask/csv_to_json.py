@@ -14,6 +14,7 @@ import atomap.api as am
 from os import path
 from PIL import Image
 import os
+import math
 
 from scipy import spatial
 import numpy as np
@@ -61,7 +62,7 @@ def getAngleBetweenPoints(x_orig, y_orig, x_landmark, y_landmark):
      return facingAngle
 
 
-def horizonal_angle(x):
+def horizontal_angle(x):
 
     x['horizontal_angle'] = getAngleBetweenPoints(x['x_position'], x['y_position'], x['x_next'], x['y_next'])
 
@@ -370,37 +371,40 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
 
     neighbors = pd.DataFrame(list(zip(distance_next_df, distance_prev_df, x_position_df, y_position_df, x_prev_df, y_prev_df, x_next_df, y_next_df, plane_df, zone_df, sublattice_df, plane_position_df)),  columns =['distance_next', "distance_prev", 'x_position', 'y_position', 'x_prev', 'y_prev', 'x_next', 'y_next', 'plane', 'zone', 'sublattice_df', 'plane_position_df'])
 
-    neighbors["combined_all"] = neighbors['zone'].astype(str) + neighbors['sublattice_df'].astype(str) + "Plane: " + neighbors['plane'].astype(str)
+    neighbors["zone_plane_horizontal"] = neighbors['zone'].astype(str) + neighbors['sublattice_df'].astype(str) + "Plane: " + neighbors['plane'].astype(str)
 
-    neighbors["combined"] = neighbors['zone'].astype(str) + neighbors['sublattice_df'].astype(str)
-
-    neighbors['zone2'] = neighbors['zone']
-    neighbors.loc[neighbors['zone2'] == (75.82, 0.08), 'zone'] = "Horizonal Line "
-    neighbors.loc[neighbors['zone2'] == (75.86, 0.02), 'zone'] = "Horizonal Line "
+    neighbors['zone_horizontal'] = neighbors['zone']
+    # neighbors.loc[neighbors['zone2'] == (75.82, 0.08), 'zone_horizontal'] = "Horizontal Line"
+    # neighbors.loc[neighbors['zone2'] == (75.86, 0.02), 'zone_horizontal'] = "Horizontal Line"
+    neighbors.loc[neighbors['zone'] == (61.49, 0.01), 'zone_horizontal'] = "Horizontal Line"
+    neighbors.loc[neighbors['zone'] == (61.47, 0.05), 'zone_horizontal'] = "Horizontal Line"
 
     #every line, with two lines combined, is it's own group
-    neighbors["combined_all2"] = neighbors['zone2'].astype(str) + "Plane: " + neighbors['plane'].astype(str)
-
-    #combined2 combines the two matrixes
-    neighbors["combined2"] = neighbors['zone2'].astype(str)
+    neighbors["zone_plane_orig"] = neighbors['zone'].astype(str) + "Plane: " + neighbors['plane'].astype(str)
 
     #every line, not combined, is it's own group
-    neighbors["combined_all"] = neighbors['zone'].astype(str) + "Plane: " + neighbors['plane'].astype(str)
-
-    #the all lines are combined into all
-    neighbors["combined"] = neighbors['zone'].astype(str)
+    neighbors["zone_plane_horizontal"] = neighbors['zone_horizontal'].astype(str) + "Plane: " + neighbors['plane'].astype(str)
 
     #the average of each indiviual line
-    neighbors['avg_y_combined'] = neighbors.groupby(['combined_all'])['y_position'].transform('mean')
+    neighbors['avg_y_horizontal'] = neighbors.groupby(['zone_plane_horizontal'])['y_position'].transform('mean')
 
     #the average of each line with two lines combined
-    neighbors['avg_y_combined2'] = neighbors.groupby(['combined_all2'])['y_position'].transform('mean')
-    neighbors['dev_y_combined'] = (neighbors['y_position'] - neighbors['avg_y_combined2'])**2
-    neighbors['stddev_y_combined'] = neighbors.groupby(['combined_all2'])['dev_y_combined'].transform('mean')**(1/2)
-    neighbors['dist_from_avg_line'] = neighbors['avg_y_combined'] - neighbors['avg_y_combined2']
+    neighbors['avg_y_zone_orig'] = neighbors.groupby(['zone_plane_orig'])['y_position'].transform('mean')
 
-    #neighbors["combined"] = neighbors[['zone', 'sublattice_df']].apply(lambda row: ''.join(row.values.astype(str)), axis=1)
-    #neighbors["combined"] = neighbors[['zone', 'sublattice_df']].apply(lambda row: ''.join(row.values.astype(str)), axis=1)
+    #average from combined lines minus original
+    neighbors['dist_from_avg_line'] = neighbors['avg_y_horizontal'] - neighbors['avg_y_zone_orig']
+
+    #ind_dist_from_avg_line_mean should be same value as dist_from_avg_line
+    neighbors['ind_dist_from_avg_line'] = neighbors['y_position'] - neighbors['avg_y_horizontal']
+    neighbors['ind_dist_from_avg_line_mean'] = neighbors.groupby(['zone_plane_orig'])['ind_dist_from_avg_line'].transform('mean')
+
+    #calculated stddev
+    neighbors['dev_y_horizontal'] = (neighbors['y_position'] - neighbors['avg_y_zone_orig'])**2
+    neighbors['stddev_y_horizontal'] = neighbors.groupby(['zone_plane_orig'])['dev_y_horizontal'].transform('mean')**(1/2)
+
+
+    #neighbors["zone_horizontal"] = neighbors[['zone_horizontal', 'sublattice_df']].apply(lambda row: ''.join(row.values.astype(str)), axis=1)
+    #neighbors["zone_horizontal"] = neighbors[['zone_horizontal', 'sublattice_df']].apply(lambda row: ''.join(row.values.astype(str)), axis=1)
 
     atoms = pd.DataFrame(list(zip(x_position_atom, y_position_atom, sigma_x_atom, sigma_y_atom, ellipticity_atom, rotation_ellipticity_atom, sublattice_atom)),  columns =['x_position', 'y_position', 'sigma_x', 'sigma_y', 'ellipticity', 'rotation_ellipticity', 'sublattice_atom'])
 
@@ -462,10 +466,8 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
         from shapely.geometry import Polygon
 
         def merge(list1, list2):
-
             merged_list = [(list1[i], list2[i]) for i in range(0, len(list1))]
             return merged_list
-        import math
 
         #https://stackoverflow.com/questions/41855695/sorting-list-of-two-dimensional-coordinates-by-clockwise-angle-using-python
         coords = merge(x_coords, y_coords)
@@ -548,7 +550,49 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
             x["area"] = None
         return x
 
-    def horizonal_angle(x):
+
+    def upper_neighbors(x):
+        sublattice_df = x['sublattice_df']
+        plane = x['plane']
+        zone_horizontal = x['zone_horizontal']
+        plane_position_df = x['plane_position_df']
+        x_position_current = x['x_position']
+        y_position_current = x['y_position']
+        subset_one_up = neighbors[(neighbors['sublattice_df'] == sublattice_df) & (neighbors['plane'] == plane + 1) & (neighbors['zone_horizontal'] == zone_horizontal) & (neighbors['plane_position_df'] == plane_position_df)]
+        subset_one_up_one_right = neighbors[(neighbors['sublattice_df'] == sublattice_df) & (neighbors['plane'] == plane + 1) & (neighbors['zone_horizontal'] == zone_horizontal) & (neighbors['plane_position_df'] == plane_position_df + 1)]
+        subset_one_right = neighbors[(neighbors['sublattice_df'] == sublattice_df) & (neighbors['plane'] == plane) & (neighbors['zone_horizontal'] == zone_horizontal) & (neighbors['plane_position_df'] == plane_position_df + 1)]
+        x_position_subset_one_up = subset_one_up['x_position'].values
+        y_position_subset_one_up = subset_one_up['y_position'].values
+        x_position_subset_one_up_one_right = subset_one_up_one_right['x_position'].values
+        y_position_subset_one_up_one_right = subset_one_up_one_right['y_position'].values
+        x_position_subset_one_right = subset_one_right['x_position'].values
+        y_position_subset_one_right = subset_one_right['y_position'].values
+        if (len(x_position_subset_one_up) + len(y_position_subset_one_up) + len(x_position_subset_one_up_one_right) + len(y_position_subset_one_up_one_right) + len(x_position_subset_one_right) + len(y_position_subset_one_right)) == 6:
+            left_x = (x_position_current + x_position_subset_one_up[0])/2
+            left_y = (y_position_current + y_position_subset_one_up[0])/2
+            right_x = (x_position_subset_one_up_one_right[0] + x_position_subset_one_right[0])/2
+            right_y = (y_position_subset_one_up_one_right[0] + y_position_subset_one_right[0])/2
+            dist = math.hypot(right_x - left_x, right_y - left_y)
+            x['x_position_subset_one_up'] = x_position_subset_one_up[0]
+            x['y_position_subset_one_up'] = y_position_subset_one_up[0]
+            x['x_position_subset_one_up_one_right'] = x_position_subset_one_up_one_right[0]
+            x['y_position_subset_one_up_one_right'] = y_position_subset_one_up_one_right[0]
+            x['x_position_subset_one_right'] = x_position_subset_one_right[0]
+            x['y_position_subset_one_right'] = y_position_subset_one_right[0]
+            x['left_x'] = left_x
+            x['left_y'] = left_y
+            x['right_x'] = right_x
+            x['right_y'] = right_y
+            x['dist'] = dist
+        else:
+            pass
+            # print(x_position_subset_one_up)
+            # print(x_position_subset_one_up_one_right)
+            # print(x_position_subset_one_right )
+            # print("")
+        return x
+
+    def horizontal_angle(x):
         x['horizontal_angle'] = getAngleBetweenPoints(x['x_position'], x['y_position'], x['x_next'], x['y_next'])
         x['center_horizontal_angle']= x['inner_angle_center_atom'] - x['horizontal_angle']
         return x
@@ -556,15 +600,14 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
     if step == "step_5":
         atoms = atoms.apply(four_neighbors, axis=1)
         neighbors = pd.merge(neighbors, atoms,  how='left', left_on=['x_position', 'y_position'], right_on = ['x_position', 'y_position'])
-
-    if step == "step_5":
-        neighbors = neighbors.apply(horizonal_angle, axis =1)
+        neighbors = neighbors.apply(upper_neighbors, axis=1)
+        neighbors = neighbors.apply(horizontal_angle, axis =1)
         neighbors[['area']] = neighbors[['area']].div(pixels_nanometer**2)
         neighbors[['filtered_area']] = neighbors[['filtered_area']].div(pixels_nanometer**2)
 
-    combined_count = neighbors[['combined', 'combined_all']].value_counts(['combined_all']).reset_index(name='combined count')
+    combined_count = neighbors[['zone', 'zone_plane_horizontal']].value_counts(['zone_plane_horizontal']).reset_index(name='combined count')
 
-    neighbors = pd.merge(neighbors, combined_count, on=['combined_all'], how='left')
+    neighbors = pd.merge(neighbors, combined_count, on=['zone_plane_horizontal'], how='left')
 
     # def filter_area(row):
     #     if row["area"] < (max_dist * 1.5/pixels_nanometer )**2 and (max_dist/pixels_nanometer * .7)**2 < row["area"]:
@@ -575,18 +618,17 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
     #     return val
     # neighbors['filtered_area'] = neighbors.apply(filter_area, axis = 1)
 
-    not_features = set(['center_horizontal_angle',  'filtered_arrow_x', 'filtered_arrow_y', 'combined_all', 'sublattice_df', 'plane_position_df', ('combined', 'count'), 'horizontal_angle', 'sublattice_atom', 'coords', 'combined', 'zone', 'plane',  'x_position', 'y_position', 'x_prev', 'y_prev', 'x_next', 'y_next',  'sigma_x', 'sigma_y',  'rotation_ellipticity',  'neighbor_1x', 'neighbor_2x', 'neighbor_3x', 'neighbor_4x', 'neighbor_1y', 'neighbor_2y', 'neighbor_3y', 'neighbor_4y',  'center_neighborsx', 'center_neighborsy',  'x_dist_center_atom', 'y_dist_center_atom',  'arrow_x', 'arrow_y',  'filtered_x_position', 'filtered_y_position', 'distance_next', 'ratio_aspect', 'inner_angle_center_atom', 'magnitude', 'area', 'distance_prev', "neighbor_1x_zero", "neighbor_2x_zero", "neighbor_3x_zero", "neighbor_4x_zero", "neighbor_1y_zero", "neighbor_2y_zero", "neighbor_3y_zero", "neighbor_4y_zero"
+    not_features = set(['center_horizontal_angle',  'filtered_arrow_x', 'filtered_arrow_y', 'zone_plane_horizontal', 'sublattice_df', 'plane_position_df', ('zone', 'count'), 'horizontal_angle', 'sublattice_atom', 'coords', 'zone', 'zone_horizontal', 'plane',  'x_position', 'y_position', 'x_prev', 'y_prev', 'x_next', 'y_next',  'sigma_x', 'sigma_y',  'rotation_ellipticity',  'neighbor_1x', 'neighbor_2x', 'neighbor_3x', 'neighbor_4x', 'neighbor_1y', 'neighbor_2y', 'neighbor_3y', 'neighbor_4y',  'center_neighborsx', 'center_neighborsy',  'x_dist_center_atom', 'y_dist_center_atom',  'arrow_x', 'arrow_y',  'filtered_x_position', 'filtered_y_position', 'distance_next', 'ratio_aspect', 'inner_angle_center_atom', 'magnitude', 'area', 'distance_prev', "neighbor_1x_zero", "neighbor_2x_zero", "neighbor_3x_zero", "neighbor_4x_zero", "neighbor_1y_zero", "neighbor_2y_zero", "neighbor_3y_zero", "neighbor_4y_zero"
          ])
 
-    #do_not_pixels_nanometer = set(['center_horizontal_angle',  'area', 'filtered_area', 'combined_all', 'sublattice_df', 'plane_position_df', ('combined', 'count'), 'ellipticity', 'rotation_ellipticity', 'horizontal_angle', 'sublattice_atom', 'ratio_aspect', 'filtered_ratio_aspect', 'filtered_inner_angle_center_atom', 'inner_angle_center_atom', 'coords', 'combined', 'zone', 'plane',  'rotation_ellipticity', 'center_horizontal_angle', "('combined', 'count')"])
-    do_not_pixels_nanometer = set(['center_horizontal_angle',  'area', 'filtered_area', 'combined_all', 'sublattice_df', 'combined2', 'combined_all2', 'plane_position_df', ('combined', 'count'), 'ellipticity', 'rotation_ellipticity', 'horizontal_angle', 'sublattice_atom', 'ratio_aspect', 'filtered_ratio_aspect', 'filtered_inner_angle_center_atom', 'inner_angle_center_atom', 'coords', 'combined', 'zone', 'zone2', 'plane',  'rotation_ellipticity', 'center_horizontal_angle', "('combined', 'count')", "intensity", "new_column"])
+    #do_not_pixels_nanometer = set(['center_horizontal_angle',  'area', 'filtered_area', 'zone_plane_horizontal', 'sublattice_df', 'plane_position_df', ('zone', 'count'), 'ellipticity', 'rotation_ellipticity', 'horizontal_angle', 'sublattice_atom', 'ratio_aspect', 'filtered_ratio_aspect', 'filtered_inner_angle_center_atom', 'inner_angle_center_atom', 'coords', 'zone', 'zone_horizontal', 'plane',  'rotation_ellipticity', 'center_horizontal_angle', "('zone', 'count')"])
+    do_not_pixels_nanometer = set(['center_horizontal_angle',  'area', 'filtered_area', 'zone_plane_horizontal', 'sublattice_df', 'zone', 'zone_plane_orig', 'plane_position_df', ('zone', 'count'), 'ellipticity', 'rotation_ellipticity', 'horizontal_angle', 'sublattice_atom', 'ratio_aspect', 'filtered_ratio_aspect', 'filtered_inner_angle_center_atom', 'inner_angle_center_atom', 'coords', 'zone', 'zone_horizontal', 'zone', 'plane',  'rotation_ellipticity', 'center_horizontal_angle', "('zone', 'count')", "intensity", "new_column"])
 
     all_columns = set(neighbors.columns)
 
     features = neighbors.filter(regex='^filtered',axis=1).columns
     features = list(set(features) - set(['filtered_arrow_x', 'filtered_arrow_y']))
-    print(features)
-
+    features.extend(['dist_from_avg_line'])
     pixels_nanometer_features = list( all_columns - do_not_pixels_nanometer )
 
     neighbors[pixels_nanometer_features] = neighbors[pixels_nanometer_features].div(pixels_nanometer)

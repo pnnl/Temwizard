@@ -12,12 +12,6 @@ var height = data.dim.height/pixels_nanometer
 var width = data.dim.width/pixels_nanometer
 var separation = data.dim.separation/pixels_nanometer
 
-console.log("pixels_nanometer")
-console.log(pixels_nanometer )
-console.log("scale_image")
-console.log(scale_image )
-console.log("pixels_nanometer*scale_image")
-console.log(pixels_nanometer*scale_image)
 //data used with info by atoms and plane
 var neighbors = data.neighbors
 
@@ -41,10 +35,8 @@ var scaled_to_pix =  d3.scaleLinear()
   .domain([0, height*scale_image])
   .range([ 0, height]);
 
-console.log(pix_to_nan(10))
-
 var group_names = neighbors.map(function(d){ return d.sublattice_df }) // list of group names
-console.log(group_names)
+
 var cat_color = d3.scaleOrdinal()
 .domain(group_names)
 .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
@@ -104,13 +96,10 @@ function update_atom_line(){
     for (var option of d3.select('#multiSelectPlane').property("selectedOptions")){
     options.push(option.value)
     }
-    console.log(options)
+
     var neighbors_filter = neighbors.filter(function(d){
     return options.includes(d.combined);
     })
-
-  console.log(neighbors_filter)
-
 
      d3.selectAll("line.lineAtoms").remove()
 
@@ -146,7 +135,6 @@ update_atom_line()
 
 
 function drawCircle(x, y, size) {
-       console.log('Drawing circle at', x, y, size);
        svg.append("circle")
            .attr('class', 'click-circle')
            .attr("cx", x)
@@ -159,7 +147,6 @@ function drawCircle(x, y, size) {
            x: x,
            y: y
          })
-          console.log(selected_squares)
    }
    var n = 1
    svg.on('click', function() {
@@ -167,7 +154,6 @@ function drawCircle(x, y, size) {
          var coords = d3.mouse(this);
          n = 2
          svg.selectAll("circle.click-circle").remove()
-         console.log(coords);
          selected_squares = new Array();
          drawCircle(coords[0], coords[1], 5);
 
@@ -180,8 +166,6 @@ function drawCircle(x, y, size) {
   dist = Math.hypot(selected_squares[0].x-selected_squares[1].x, selected_squares[0].y-selected_squares[1].y)
   dist = scaled_to_pix(dist)
   dist_nan = pix_to_nan(dist)
-  console.log(dist)
-  console.log(dist_nan)
 
 svg.selectAll("text").remove()
 svg.append("text")

@@ -43,7 +43,7 @@
                   </p>
               </form>
               <div>
-                  <div id="line_chart"></div>
+                  <div id="line_chart_avg"></div>
               </div>
             </div>
             <div class = "two">
@@ -70,13 +70,15 @@
       var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
       image  = baseUrl + image
       var sublattice_all = {{ tables.all_sublattices| tojson }};
+      console.log(zone_all)
+      console.log(sublattice_all)
     </script>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
 
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/line_chart.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='javascript/line_chart_avg.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/atom_map.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='javascript/datatable.js') }}"></script>
 
 
 {% endblock %}

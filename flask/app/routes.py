@@ -69,7 +69,7 @@ def first_sublattice():
 
     tables = {}
     #have the options only be the planes available for sublattices 0 and 1
-    tables["all_zones"] = neighbors['combined'].drop_duplicates().tolist()
+    tables["all_zones"] = neighbors['zone'].drop_duplicates().tolist()
     tables["all_sublattices"] = neighbors['sublattice_df'].drop_duplicates().tolist()
 
     neighbors_json = json.loads(neighbors.to_json(orient='records'))
@@ -256,7 +256,7 @@ def fifth_sublattice():
 
     tables = {}
     #have the options only be the planes available for sublattices 0 and 1
-    tables["all_zones"] = neighbors['combined'].drop_duplicates().tolist()
+    tables["all_zones"] = neighbors['zone_horizontal'].drop_duplicates().tolist()
     tables["all_sublattices"] = neighbors['sublattice_df'].drop_duplicates().tolist()
 
     neighbors_json = json.loads(neighbors.to_json(orient='records'))
