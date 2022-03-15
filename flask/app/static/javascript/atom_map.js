@@ -111,15 +111,18 @@ var shades=d3.scaleLinear()
 //               .domain([d3.min(neighbors_filter, function(d) { return +d[selectedColumn]}),d3.max(neighbors_filter, function(d) { return +d[selectedColumn] })])
 
 var group_names = neighbors.map(function(d){ return d.sublattice_df }) // list of group names
+console.log(group_names)
 
 var cat_color = d3.scaleOrdinal()
 .domain(group_names)
 .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
 
+neighbors_first = neighbors.filter(function(d){return d.sublattice_df=='<Sublattice,  (atoms:124,planes:6)>'})
+console.log(neighbors_first)
 //dot for center of atom
 var atom_dot = svg.append('g')
   .selectAll("dot")
-  .data(neighbors)
+  .data(neighbors_first)
   .enter()
   .append("circle")
     .attr("cx", function (d) { return x_image(d.x_position); } )
@@ -186,6 +189,26 @@ function update_atom_line(){
 
                 widthLine.exit().remove()
 
+           d3.selectAll("line.heightLine").remove()
+            var heightLine = svg
+                  .selectAll("line.heightLine")
+                  .data(neighbors_filter)
+
+            var heightLineEnter = heightLine
+                  .enter()
+                  .append("line")
+                  .attr("class", "heightLine")
+
+            heightLineEnter
+                .attr("x1", function (d) { return x_image(d.top_x); })
+                .attr("y1", function (d) { return y_image(d.top_y); })
+                .attr("x2", function (d) { return x_image(d.bottom_x); })
+                .attr("y2", function (d) { return y_image(d.bottom_y); })
+                .attr("stroke-width", 1)
+                .attr('stroke', "orange")
+
+               heightLine.exit().remove()
+
                              }
 
 
@@ -213,53 +236,53 @@ function update_atom_min(){
     neighbors_filter = neighbors.filter(function(d){return d.zone==selectedGroup_value && d[selectedColumn] != null})}
   else{
     neighbors_filter = neighbors.filter(function(d){return d.plane== null})}
-
-            d3.selectAll("polygon.tiles").remove()
-
-            //add color coded rectangles with values corresponding the 2nd plane (the default)
-            var atom_rect = svg.selectAll("polygon.tiles").data(neighbors_filter)
-            var atom_rectEnter = atom_rect
-                                  .enter()
-                                  .append("polygon")
-                                  .attr("class", "tiles")
-            atom_rectEnter
-                .attr("points",function(d) {
-                    return x_image(d.neighbor_1x) + "," +	y_image(d.neighbor_1y)	+ " " + x_image(d.neighbor_2x) + "," +	y_image(d.neighbor_2y) + " " +	x_image(d.neighbor_3x) + "," +	y_image(d.neighbor_3y) + " " +		x_image(d.neighbor_4x) + "," +	y_image(d.neighbor_4y)
-                })
-                .attr("stroke","white")
-                .attr("stroke-width", 2)
-                .style("fill", function(d) {return shades(+d[selectedColumn])})
-                //.attr("test", function(d) {return console.log(zone_all[1].includes(d.zone)) })
-                .style("fill-opacity", .4)
-                .on("mouseover", function(d) {
-
-                                    Tooltip
-                                         .style("opacity", 1)
-                                         .style("left", (d3.event.pageX) + "px")
-                                         .style("top", (d3.event.pageY - 28) + "px")
-
-                                         .style('font-size', '14px')
-                                        .html("Features: " + " <br/> "  +
-                                                      "<b>" +  "inner_angle_center_atom: " + "</b>" + d.inner_angle_center_atom + " <br/> "  +
-                                                      "<b>" +   "sigma_x: " + "</b>"  + d.sigma_x + " <br/> "  +
-                                                      "<b>" +   "x_dist_center_atom: " + "</b>" + d.x_dist_center_atom + " <br/> "  +
-                                                      "<b>" +   "y_dist_center_atom: " + "</b>" + d.y_dist_center_atom + " <br/> "  +
-                                                      "<b>" +   "distance_next: " + "</b>" + d.distance_next + " <br/> "  +
-                                                      "<b>" +   "distance_prev: " + "</b>" + d.distance_prev + " <br/> "  +
-                                                      "<b>" +   "magnitude: " + "</b>" + d.magnitude + " <br/> "  +
-                                                      "<b>" +   "area: " + "</b>" + d.filtered_area + " <br/> "  +
-                                                      "<b>" +   "area: " + "</b>" + d.area + " <br/> "  +
-                                                      "<b>" +   "ratio_aspect: " + "</b>" + d.ratio_aspect)
-                                    })
-
-
-                                      .on("mouseout", function() {
-
-                                      })
-
-
-
-            atom_rect.exit().remove();
+            //
+            // d3.selectAll("polygon.tiles").remove()
+            //
+            // //add color coded rectangles with values corresponding the 2nd plane (the default)
+            // var atom_rect = svg.selectAll("polygon.tiles").data(neighbors_filter)
+            // var atom_rectEnter = atom_rect
+            //                       .enter()
+            //                       .append("polygon")
+            //                       .attr("class", "tiles")
+            // atom_rectEnter
+            //     .attr("points",function(d) {
+            //         return x_image(d.neighbor_1x) + "," +	y_image(d.neighbor_1y)	+ " " + x_image(d.neighbor_2x) + "," +	y_image(d.neighbor_2y) + " " +	x_image(d.neighbor_3x) + "," +	y_image(d.neighbor_3y) + " " +		x_image(d.neighbor_4x) + "," +	y_image(d.neighbor_4y)
+            //     })
+            //     .attr("stroke","white")
+            //     .attr("stroke-width", 2)
+            //     .style("fill", function(d) {return shades(+d[selectedColumn])})
+            //     //.attr("test", function(d) {return console.log(zone_all[1].includes(d.zone)) })
+            //     .style("fill-opacity", .4)
+            //     .on("mouseover", function(d) {
+            //
+            //                         Tooltip
+            //                              .style("opacity", 1)
+            //                              .style("left", (d3.event.pageX) + "px")
+            //                              .style("top", (d3.event.pageY - 28) + "px")
+            //
+            //                              .style('font-size', '14px')
+            //                             .html("Features: " + " <br/> "  +
+            //                                           "<b>" +  "inner_angle_center_atom: " + "</b>" + d.inner_angle_center_atom + " <br/> "  +
+            //                                           "<b>" +   "sigma_x: " + "</b>"  + d.sigma_x + " <br/> "  +
+            //                                           "<b>" +   "x_dist_center_atom: " + "</b>" + d.x_dist_center_atom + " <br/> "  +
+            //                                           "<b>" +   "y_dist_center_atom: " + "</b>" + d.y_dist_center_atom + " <br/> "  +
+            //                                           "<b>" +   "distance_next: " + "</b>" + d.distance_next + " <br/> "  +
+            //                                           "<b>" +   "distance_prev: " + "</b>" + d.distance_prev + " <br/> "  +
+            //                                           "<b>" +   "magnitude: " + "</b>" + d.magnitude + " <br/> "  +
+            //                                           "<b>" +   "area: " + "</b>" + d.filtered_area + " <br/> "  +
+            //                                           "<b>" +   "area: " + "</b>" + d.area + " <br/> "  +
+            //                                           "<b>" +   "ratio_aspect: " + "</b>" + d.ratio_aspect)
+            //                         })
+            //
+            //
+            //                           .on("mouseout", function() {
+            //
+            //                           })
+            //
+            //
+            //
+            // atom_rect.exit().remove();
 
 //add line for the angle of the line
             d3.selectAll("line.angleLine").remove()

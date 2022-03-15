@@ -395,7 +395,7 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
     neighbors['dist_from_avg_line'] = neighbors['avg_y_horizontal'] - neighbors['avg_y_zone_orig']
 
     #ind_dist_from_avg_line_mean should be same value as dist_from_avg_line
-    neighbors['ind_dist_from_avg_line'] = neighbors['y_position'] - neighbors['avg_y_horizontal']
+    neighbors['ind_dist_from_avg_line'] = neighbors['avg_y_horizontal'] -  neighbors['y_position']
     neighbors['ind_dist_from_avg_line_mean'] = neighbors.groupby(['zone_plane_orig'])['ind_dist_from_avg_line'].transform('mean')
 
     #calculated stddev
@@ -567,23 +567,43 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
         y_position_subset_one_up_one_right = subset_one_up_one_right['y_position'].values
         x_position_subset_one_right = subset_one_right['x_position'].values
         y_position_subset_one_right = subset_one_right['y_position'].values
-        if (len(x_position_subset_one_up) + len(y_position_subset_one_up) + len(x_position_subset_one_up_one_right) + len(y_position_subset_one_up_one_right) + len(x_position_subset_one_right) + len(y_position_subset_one_right)) == 6:
-            left_x = (x_position_current + x_position_subset_one_up[0])/2
-            left_y = (y_position_current + y_position_subset_one_up[0])/2
-            right_x = (x_position_subset_one_up_one_right[0] + x_position_subset_one_right[0])/2
-            right_y = (y_position_subset_one_up_one_right[0] + y_position_subset_one_right[0])/2
-            dist = math.hypot(right_x - left_x, right_y - left_y)
+        if (len(x_position_subset_one_up) + len(y_position_subset_one_up) + len(x_position_subset_one_up_one_right) + len(y_position_subset_one_up_one_right) + len(x_position_subset_one_right) + len(y_position_subset_one_right) == 6) and (plane != 0):
+            # save in dataframe
             x['x_position_subset_one_up'] = x_position_subset_one_up[0]
             x['y_position_subset_one_up'] = y_position_subset_one_up[0]
             x['x_position_subset_one_up_one_right'] = x_position_subset_one_up_one_right[0]
             x['y_position_subset_one_up_one_right'] = y_position_subset_one_up_one_right[0]
             x['x_position_subset_one_right'] = x_position_subset_one_right[0]
             x['y_position_subset_one_right'] = y_position_subset_one_right[0]
+
+            # get distance lengthwise
+            left_x = (x_position_current + x_position_subset_one_up[0])/2
+            left_y = (y_position_current + y_position_subset_one_up[0])/2
+            right_x = (x_position_subset_one_up_one_right[0] + x_position_subset_one_right[0])/2
+            right_y = (y_position_subset_one_up_one_right[0] + y_position_subset_one_right[0])/2
+
+            dist_hori = math.dist((left_x, left_y), (right_x, right_y))
+
             x['left_x'] = left_x
             x['left_y'] = left_y
             x['right_x'] = right_x
             x['right_y'] = right_y
-            x['dist'] = dist
+            x['dist_hori'] = dist_hori
+
+            # get distance heightwise
+            top_x = (x_position_subset_one_up[0] + x_position_subset_one_up_one_right[0])/2
+            top_y = (y_position_subset_one_up[0] + y_position_subset_one_up_one_right[0])/2
+            bottom_x = (x_position_current + x_position_subset_one_right[0])/2
+            bottom_y = (y_position_current + y_position_subset_one_right[0])/2
+
+            dist_vert = math.dist((top_x, top_y), (bottom_x, bottom_y))
+
+            x['top_x'] = top_x
+            x['top_y'] = top_y
+            x['bottom_x'] = bottom_x
+            x['bottom_y'] = bottom_y
+            x['dist_vert'] = dist_vert
+
         else:
             pass
             # print(x_position_subset_one_up)
@@ -628,7 +648,7 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
 
     features = neighbors.filter(regex='^filtered',axis=1).columns
     features = list(set(features) - set(['filtered_arrow_x', 'filtered_arrow_y']))
-    features.extend(['dist_from_avg_line'])
+    features.extend(['dist_from_avg_line', 'ind_dist_from_avg_line', 'dist_hori', 'dist_vert', 'distance_next'])
     pixels_nanometer_features = list( all_columns - do_not_pixels_nanometer )
 
     neighbors[pixels_nanometer_features] = neighbors[pixels_nanometer_features].div(pixels_nanometer)
