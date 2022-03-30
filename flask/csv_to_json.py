@@ -133,13 +133,13 @@ def make_atom_lattice(orig_image, max_dist, plane_first_sublattice, plane_second
 
     #first sublattice info (most intense atoms)
     A_positions = am.get_atom_positions(s, separation=max_dist)
-    sublattice_A = am.Sublattice(A_positions, image=s.data)
-    atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A])
+    sublattice_A = am.Sublattice(A_positions, image=s.data, fix_negative_values=True)
+    atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A], fix_negative_values=True)
 
 
     if step == "step_1":
         sublattice_A.find_nearest_neighbors()
-        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A])
+        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A], fix_negative_values=True)
         atom_lattice.save("app/static/hdf5/" + name_atom_lattice, overwrite=True)
 
     elif step == "step_2":
@@ -148,7 +148,7 @@ def make_atom_lattice(orig_image, max_dist, plane_first_sublattice, plane_second
         sublattice_A.refine_atom_positions_using_center_of_mass()
         sublattice_A.refine_atom_positions_using_2d_gaussian()
         sublattice_A.construct_zone_axes()
-        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A])
+        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A], fix_negative_values=True)
         atom_lattice.save("app/static/hdf5/" + name_atom_lattice, overwrite=True)
 
     elif step == "step_3":
@@ -167,7 +167,7 @@ def make_atom_lattice(orig_image, max_dist, plane_first_sublattice, plane_second
         sublattice_B.refine_atom_positions_using_2d_gaussian()
         sublattice_B.construct_zone_axes()
 
-        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A, sublattice_B])
+        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A, sublattice_B], fix_negative_values=True)
         atom_lattice.save("app/static/hdf5/" + name_atom_lattice, overwrite=True)
 
 
@@ -193,7 +193,7 @@ def make_atom_lattice(orig_image, max_dist, plane_first_sublattice, plane_second
         sublattice_C.refine_atom_positions_using_center_of_mass()
         sublattice_C.refine_atom_positions_using_2d_gaussian()
         sublattice_C.construct_zone_axes()
-        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A, sublattice_B, sublattice_C])
+        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A, sublattice_B, sublattice_C], fix_negative_values=True)
         atom_lattice.save("app/static/hdf5/" + name_atom_lattice, overwrite=True)
     else:
 

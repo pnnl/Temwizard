@@ -12,7 +12,6 @@ import atomap.api as am
 from os import path
 from PIL import Image
 import cv2
-from werkzeug import secure_filename
 
 @app.after_request
 def add_header(response):
@@ -64,7 +63,7 @@ def first_sublattice():
 
     # create the data that the viz uses
     feature, list_sublattice_a = csv_to_json2(image_string, max_dist, plane_first_sublattice, plane_second_sublattice, pixels_nanometer, step = "step_1")
-    monolayer= pd.read_csv(os.path.join(app.static_folder, 'data_json/monolayer_test.csv'))
+
     neighbors = pd.read_csv(os.path.join(app.static_folder, 'data_json/neighbors_test.csv'), engine='python')
 
     tables = {}
@@ -109,7 +108,7 @@ def second_sublattice():
     image = {'image': "static/images/" + image_string}
 
     feature, list_sublattice_a = csv_to_json2(image_string, max_dist, plane_first_sublattice, plane_second_sublattice, pixels_nanometer, step = "step_2")
-    monolayer= pd.read_csv(os.path.join(app.static_folder, 'data_json/monolayer_test.csv'))
+
     neighbors = pd.read_csv(os.path.join(app.static_folder, 'data_json/neighbors_test.csv'), engine='python')
 
     list_sublattice_a = [str(x) for x in list_sublattice_a]
@@ -157,7 +156,7 @@ def third_sublattice():
     image = {'image': "static/images/" + image_string}
 
     feature, list_sublattice_a = csv_to_json2(image_string, max_dist, plane_first_sublattice, plane_second_sublattice, pixels_nanometer, step = "step_3")
-    monolayer= pd.read_csv(os.path.join(app.static_folder, 'data_json/monolayer_test.csv'))
+
     neighbors = pd.read_csv(os.path.join(app.static_folder, 'data_json/neighbors_test.csv'), engine='python')
 
     list_sublattice_a = [str(x) for x in list_sublattice_a]
@@ -204,7 +203,7 @@ def fourth_sublattice():
     image = {'image': "static/images/" + image_string}
 
     feature, list_sublattice_a = csv_to_json2(image_string, max_dist, plane_first_sublattice, plane_second_sublattice, pixels_nanometer, step = "step_4")
-    monolayer= pd.read_csv(os.path.join(app.static_folder, 'data_json/monolayer_test.csv'))
+
     neighbors = pd.read_csv(os.path.join(app.static_folder, 'data_json/neighbors_test.csv'), engine='python')
 
     tables = {}
@@ -263,4 +262,4 @@ def fifth_sublattice():
 
     data ={'dim': {'height': s.data.shape[0], 'width' : s.data.shape[1], 'separation': max_dist, 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}, 'neighbors': neighbors_json, 'feature': feature}
 
-    return render_template('chart_first.html', data = data, form=form, tables =tables, image =  image, list_sublattice_a = str(list_sublattice_a))
+    return render_template('chart_last.html', data = data, form=form, tables =tables, image =  image, list_sublattice_a = str(list_sublattice_a))
