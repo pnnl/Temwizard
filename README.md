@@ -16,7 +16,8 @@ How to Use TEMWizard
 
 1. Update filename and click "Rerun Atomap on current page" to reload
 <p align="center">
-<img src="flask/app/static/docs/images/screenshot_1.png" width="700">
+
+<img src="https://raw.githubusercontent.com/pnnl/Temwizard/master/flask/app/static/doc/images/screenshot_1.png" width="300">
 </p>
 2. Click on image to get pixel distance between atoms. Update half this value to "Half the distance between most intense atoms" and run "Rerun Atomap on current page". Try new values until the atoms in the most intense sublattice are identified. 
 <p align="center">
