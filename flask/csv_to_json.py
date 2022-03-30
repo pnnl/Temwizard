@@ -133,13 +133,13 @@ def make_atom_lattice(orig_image, max_dist, plane_first_sublattice, plane_second
 
     #first sublattice info (most intense atoms)
     A_positions = am.get_atom_positions(s, separation=max_dist)
-    sublattice_A = am.Sublattice(A_positions, image=s.data, fix_negative_values=True)
-    atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A], fix_negative_values=True)
+    sublattice_A = am.Sublattice(A_positions, image=s.data)
+    atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A])
 
 
     if step == "step_1":
         sublattice_A.find_nearest_neighbors()
-        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A], fix_negative_values=True)
+        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A])
         atom_lattice.save("app/static/hdf5/" + name_atom_lattice, overwrite=True)
 
     elif step == "step_2":
@@ -148,7 +148,7 @@ def make_atom_lattice(orig_image, max_dist, plane_first_sublattice, plane_second
         sublattice_A.refine_atom_positions_using_center_of_mass()
         sublattice_A.refine_atom_positions_using_2d_gaussian()
         sublattice_A.construct_zone_axes()
-        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A], fix_negative_values=True)
+        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A])
         atom_lattice.save("app/static/hdf5/" + name_atom_lattice, overwrite=True)
 
     elif step == "step_3":
@@ -156,18 +156,21 @@ def make_atom_lattice(orig_image, max_dist, plane_first_sublattice, plane_second
         sublattice_A = atom_lattice.sublattice_list[0]
 
         zone_axis = sublattice_A.zones_axis_average_distances[plane_first_sublattice]
-        print(sublattice_A.zones_axis_average_distances)
+
         B_positions = sublattice_A.find_missing_atoms_from_zone_vector(zone_axis)
+        #I think a bug in atomap is making the resulting image negative, but the image is not used in the final sublattice
         image_without_A = remove_atoms_from_image_using_2d_gaussian(sublattice_A.image, sublattice_A, show_progressbar=False)
 
-        sublattice_B = am.Sublattice(B_positions, image=image_without_A)
+        cv2.imwrite("app/static/images/image_without_a_ne.jpg", image_without_A )
+        #using fix_negative_values=True to deal with subtracted image having negative value
+        sublattice_B = am.Sublattice(B_positions, image=image_without_A, fix_negative_values=True)
 
         sublattice_B.find_nearest_neighbors()
         sublattice_B.refine_atom_positions_using_center_of_mass()
         sublattice_B.refine_atom_positions_using_2d_gaussian()
         sublattice_B.construct_zone_axes()
 
-        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A, sublattice_B], fix_negative_values=True)
+        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A, sublattice_B])
         atom_lattice.save("app/static/hdf5/" + name_atom_lattice, overwrite=True)
 
 
@@ -179,21 +182,19 @@ def make_atom_lattice(orig_image, max_dist, plane_first_sublattice, plane_second
 
         #adding sublattice c
         image_without_B = remove_atoms_from_image_using_2d_gaussian(sublattice_B.image, sublattice_B)
+
         cv2.imwrite("app/static/images/image_without_b.jpg", image_without_B )
         #get B poistions by mid-point of one of sublattice planes
-        print(sublattice_A.zones_axis_average_distances)
         zone_axis = sublattice_A.zones_axis_average_distances[plane_second_sublattice]
-        print(zone_axis)
-        # (25.74, 0.02)
         C_positions = sublattice_A.find_missing_atoms_from_zone_vector(zone_axis)
 
-        sublattice_C = am.Sublattice(C_positions, image=image_without_B, color='b')
+        sublattice_C = am.Sublattice(C_positions, image=image_without_B, color='b', fix_negative_values=True)
 
         sublattice_C.find_nearest_neighbors()
         sublattice_C.refine_atom_positions_using_center_of_mass()
         sublattice_C.refine_atom_positions_using_2d_gaussian()
         sublattice_C.construct_zone_axes()
-        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A, sublattice_B, sublattice_C], fix_negative_values=True)
+        atom_lattice = am.Atom_Lattice(image=s.data, name='test', sublattice_list=[sublattice_A, sublattice_B, sublattice_C])
         atom_lattice.save("app/static/hdf5/" + name_atom_lattice, overwrite=True)
     else:
 
