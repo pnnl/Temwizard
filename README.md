@@ -50,7 +50,7 @@ Installation
 
 3. cd to the folder "flask" within temwizard (example below, you can type cd in Terminal and then drag the flask folder to the terminal to quickly get the address)
 
-`cd ...temwizard/flask`
+`cd flask`
 
 4. create virtual environment
 
