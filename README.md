@@ -54,17 +54,11 @@ Installation
 
 4. create virtual environment
 
-`python -m venv venv`
+`conda create -n temwizard_env python=3.7 `
 
 5. activate virtual environment 
 
-(mac)
-
-`source venv/bin/activate`
-
-(windows)
-
-`venv\Scripts\activate`
+`conda activate temwizard_env`
 
 6. Install all necessary packages
 
