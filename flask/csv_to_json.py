@@ -18,10 +18,8 @@ import math
 
 from scipy import spatial
 import numpy as np
-import math
 from statistics import mean
 import cv2
-import math
 from atomap.tools import remove_atoms_from_image_using_2d_gaussian
 
 from math import acos
@@ -582,7 +580,7 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
             right_x = (x_position_subset_one_up_one_right[0] + x_position_subset_one_right[0])/2
             right_y = (y_position_subset_one_up_one_right[0] + y_position_subset_one_right[0])/2
 
-            dist_hori = math.dist((left_x, left_y), (right_x, right_y))
+            dist_hori = math.hypot(left_x -right_x, left_y - right_y)
 
             x['left_x'] = left_x
             x['left_y'] = left_y
@@ -596,7 +594,7 @@ def csv_to_json2(orig_image, max_dist, plane_first_sublattice, plane_second_subl
             bottom_x = (x_position_current + x_position_subset_one_right[0])/2
             bottom_y = (y_position_current + y_position_subset_one_right[0])/2
 
-            dist_vert = math.dist((top_x, top_y), (bottom_x, bottom_y))
+            dist_vert = math.hypot(top_x -bottom_x, top_y -bottom_y)
 
             x['top_x'] = top_x
             x['top_y'] = top_y

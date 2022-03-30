@@ -12,7 +12,6 @@ import atomap.api as am
 from os import path
 from PIL import Image
 import cv2
-from werkzeug import secure_filename
 
 @app.after_request
 def add_header(response):
@@ -64,7 +63,7 @@ def first_sublattice():
 
     # create the data that the viz uses
     feature, list_sublattice_a = csv_to_json2(image_string, max_dist, plane_first_sublattice, plane_second_sublattice, pixels_nanometer, step = "step_1")
-    monolayer= pd.read_csv(os.path.join(app.static_folder, 'data_json/monolayer_test.csv'))
+    
     neighbors = pd.read_csv(os.path.join(app.static_folder, 'data_json/neighbors_test.csv'), engine='python')
 
     tables = {}
@@ -104,12 +103,12 @@ def second_sublattice():
     name = image_string.split('.')[0]
     ext = image_string.split('.')[1]
     image_string = name +  "." + ext
-
+    print(os.path.join(app.static_folder, "images/", image_string))
     s=hs.load(os.path.join(app.static_folder, "images/", image_string))
     image = {'image': "static/images/" + image_string}
 
     feature, list_sublattice_a = csv_to_json2(image_string, max_dist, plane_first_sublattice, plane_second_sublattice, pixels_nanometer, step = "step_2")
-    monolayer= pd.read_csv(os.path.join(app.static_folder, 'data_json/monolayer_test.csv'))
+
     neighbors = pd.read_csv(os.path.join(app.static_folder, 'data_json/neighbors_test.csv'), engine='python')
 
     list_sublattice_a = [str(x) for x in list_sublattice_a]
@@ -157,7 +156,7 @@ def third_sublattice():
     image = {'image': "static/images/" + image_string}
 
     feature, list_sublattice_a = csv_to_json2(image_string, max_dist, plane_first_sublattice, plane_second_sublattice, pixels_nanometer, step = "step_3")
-    monolayer= pd.read_csv(os.path.join(app.static_folder, 'data_json/monolayer_test.csv'))
+
     neighbors = pd.read_csv(os.path.join(app.static_folder, 'data_json/neighbors_test.csv'), engine='python')
 
     list_sublattice_a = [str(x) for x in list_sublattice_a]
@@ -204,7 +203,7 @@ def fourth_sublattice():
     image = {'image': "static/images/" + image_string}
 
     feature, list_sublattice_a = csv_to_json2(image_string, max_dist, plane_first_sublattice, plane_second_sublattice, pixels_nanometer, step = "step_4")
-    monolayer= pd.read_csv(os.path.join(app.static_folder, 'data_json/monolayer_test.csv'))
+
     neighbors = pd.read_csv(os.path.join(app.static_folder, 'data_json/neighbors_test.csv'), engine='python')
 
     tables = {}
