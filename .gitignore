@@ -1,0 +1,17 @@
+.ipynb_checkpoints/*
+.Rhistory
+*.DS_Store
+.vscode*
+*__pycache__*
+*.egg-info
+*.ipynb_checkpoints*
+htmlcov
+.*.swp
+build
+dist
+doc/build/html
+.coverage
+*.pkl
+flask/app/static/images/*
+flask/app/static/data_json/*
+flask/app/static/hdf5/*
