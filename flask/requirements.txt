@@ -11,3 +11,4 @@ flask_bootstrap
 flask-wtf
 opencv-python
 shapely
+flask_session

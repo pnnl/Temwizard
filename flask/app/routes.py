@@ -1,7 +1,6 @@
-from flask import render_template,  url_for, Flask, render_template, request, jsonify
+from flask import render_template,  url_for, Flask, render_template, request, jsonify, session
 from app import app
-from app.forms import FirstSublattice
-from config import *
+from app.forms import FirstSublattice, ViewImageForm
 import os, pdb, math, json, time
 from csv_to_json import process_image, csv_to_json2
 import pandas as pd
@@ -12,6 +11,11 @@ import atomap.api as am
 from os import path
 from PIL import Image
 import cv2
+from flask_session import Session
+
+from flask import Flask, render_template, request
+from werkzeug.utils import secure_filename
+
 
 @app.after_request
 def add_header(response):
@@ -24,28 +28,39 @@ def add_header(response):
     return response
 
 
+@app.route('/')
+def upload_file():
+   return render_template('upload.html')
+
 @app.route('/process_image', methods=['GET', 'POST'])
 def view_image():
     form = ViewImageForm()
-    image_string = form.image.data
-    pre_process = form.pre_process.data
+    if request.method == 'POST':
+      f = request.files['file']
+      f.save(os.path.join(app.config['UPLOAD_FOLDER'], f.filename))
+      print(os.path.join(app.config['UPLOAD_FOLDER'], f.filename))
+    session['file'] = f.filename
     scale_image = form.scale_image.data
     pixels_nanometer = float(form.pixels_nanometer.data)
 
-    s=hs.load(os.path.join(app.static_folder, "images/", image_string))
-
+    s=hs.load(os.path.join(app.static_folder, "images/", session.get('file')))
+    image = {'image': "static/images/" + session.get('file')}
+    if  s.data.shape[1] > 800:
+        form.scale_image.data = .5
+        scale_image = .5
     data = {'height': s.data.shape[0], 'width' : s.data.shape[1], 'scale_image': scale_image, 'pixels_nanometer': pixels_nanometer}
-    image_name = process_image(image_string, pixels_nanometer, pre_process)
-
-    image = {'image': image_name}
     return render_template('chart_view_image.html', data = data, form=form, image = image)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/first_sublattice', methods=['GET', 'POST'])
 def first_sublattice():
     form = FirstSublattice()
+    if request.method == 'GET':
+        form.max_dist.data = float(request.args.get('max_dist'))
+        form.scale_image.data = float(request.args.get('scale_image'))
+        form.pixels_nanometer.data = float(request.args.get('pixels_nanometer'))
 
     #get data from form
-    image_string = form.image.data
+    image_string = session.get('file')
     plane_first_sublattice = form.plane_first_sublattice.data
     plane_second_sublattice = form.plane_second_sublattice.data
     max_dist = form.max_dist.data
@@ -58,7 +73,7 @@ def first_sublattice():
     ext = image_string.split('.')[1]
     image_string = name +  "." + ext
 
-    s=hs.load(os.path.join(app.static_folder, "images/", image_string))
+    s=hs.load(os.path.join(app.config['UPLOAD_FOLDER'], image_string))
     image = {'image': "static/images/" + image_string}
 
     # create the data that the viz uses
@@ -87,10 +102,9 @@ def second_sublattice():
 
         form.scale_image.data = float(request.args.get('scale_image'))
         form.pixels_nanometer.data = float(request.args.get('pixels_nanometer'))
-        form.image.data = str(request.args.get('image'))
         # form.process()
 
-    image_string = form.image.data
+    image_string = session.get('file')
 
     plane_first_sublattice = form.plane_first_sublattice.data
     plane_second_sublattice = form.plane_second_sublattice.data
@@ -131,7 +145,6 @@ def third_sublattice():
     #max_dist image scale_image pixels_nanometer
 
     if request.method == 'GET':
-        form.image.data = str(request.args.get('image'))
         form.scale_image.data = float(request.args.get('scale_image'))
         form.pixels_nanometer.data = float(request.args.get('pixels_nanometer'))
         form.max_dist.data = float(request.args.get('max_dist'))
@@ -139,7 +152,7 @@ def third_sublattice():
         form.plane_second_sublattice.data = int(request.args.get('plane_second_sublattice'))
         # form.process()
 
-    image_string = form.image.data
+    image_string = session.get('file')
     plane_first_sublattice = form.plane_first_sublattice.data
     plane_second_sublattice = form.plane_second_sublattice.data
     max_dist = form.max_dist.data
@@ -178,7 +191,6 @@ def fourth_sublattice():
     #max_dist image scale_image pixels_nanometer
 
     if request.method == 'GET':
-        form.image.data = str(request.args.get('image'))
         form.scale_image.data = float(request.args.get('scale_image'))
         form.pixels_nanometer.data = float(request.args.get('pixels_nanometer'))
         form.max_dist.data = float(request.args.get('max_dist'))
@@ -186,7 +198,7 @@ def fourth_sublattice():
         form.plane_second_sublattice.data = int(request.args.get('plane_second_sublattice'))
         # form.process()
 
-    image_string = form.image.data
+    image_string = session.get('file')
     plane_first_sublattice = form.plane_first_sublattice.data
     plane_second_sublattice = form.plane_second_sublattice.data
     max_dist = form.max_dist.data
@@ -226,7 +238,6 @@ def fifth_sublattice():
     #max_dist image scale_image pixels_nanometer
 
     if request.method == 'GET':
-        form.image.data = str(request.args.get('image'))
         form.scale_image.data = float(request.args.get('scale_image'))
         form.pixels_nanometer.data = float(request.args.get('pixels_nanometer'))
         form.max_dist.data = float(request.args.get('max_dist'))
@@ -234,7 +245,7 @@ def fifth_sublattice():
         form.plane_second_sublattice.data = int(request.args.get('plane_second_sublattice'))
         # form.process()
 
-    image_string = form.image.data
+    image_string = session.get('file')
     plane_first_sublattice = form.plane_first_sublattice.data
     plane_second_sublattice = form.plane_second_sublattice.data
     max_dist = form.max_dist.data

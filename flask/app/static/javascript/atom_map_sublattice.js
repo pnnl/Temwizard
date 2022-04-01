@@ -180,8 +180,6 @@ function drawCircle(x, y, size) {
   dist = Math.hypot(selected_squares[0].x-selected_squares[1].x, selected_squares[0].y-selected_squares[1].y)
   dist = scaled_to_pix(dist)
   dist_nan = pix_to_nan(dist)
-  console.log(dist)
-  console.log(dist_nan)
 
 svg.selectAll("text").remove()
 svg.append("text")
