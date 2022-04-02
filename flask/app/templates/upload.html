@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="../../static/css/styles.css">
+        <!-- title -->
+        <title>pyCHIP Home</title>
+    </head>
+   <body>
+        <div class="wrapper">
+            <div class="sidebar">
+                <h2>TemWizard</h2>
+
+            </div>
+            <main>
+
+              <h1 align="center"> Upload Your Image </h1>
+                <div id ="circle"></div>
+                <div class = "container">
+                    <div class = "row"></div>
+                    <div class = "row"></div>
+                    <center><h2>Select A File To Upload</h2></center>
+                    <center><form action = "/process_image" method = "POST" enctype = "multipart/form-data">
+                        <input type = "file" name = "file" class = "form-control" autocomplete="off" required>
+                        <input type = "submit" value = "Submit" class="btn btn-info">
+                    </form></center>
+                </div>
+            </main>
+        </div>
+    </body>
+
+</html>
+
+
+{% endblock %}
