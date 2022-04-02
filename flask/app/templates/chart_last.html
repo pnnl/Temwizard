@@ -54,6 +54,12 @@
                     <select id="selectFeature"></select> <br>
                   <p>Select Zones to View</p>
                     <select multiple id="multiSelectPlane"></select>
+                  <p>Lowest Number</p>
+                    <input type="text" value="white" id="colorpicker1">
+                  <p>Highest Number</p>
+                    <input type="text" value="blue" id="colorpicker2">
+                  <a href="{{ url_for('download', filename="downloadFile.txt") }}">Download File</a>
+
                 </div>
                 <div id="map" >
 

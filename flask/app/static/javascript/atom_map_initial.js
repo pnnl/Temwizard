@@ -94,7 +94,7 @@ svg.append("text")
         .attr("y", 0 - (margin.top / 2))
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
-        .text(Math.round(dist) + " pixels / " + pixels_nanometer  + " = "+ Math.round(dist_nan* 100)/100 + "nm");
+        .text(Math.round(dist) + " pixels / " + pixels_nanometer * scale_image + " = "+ Math.round(dist_nan* 100)/100 + "nm");
        }
 
 

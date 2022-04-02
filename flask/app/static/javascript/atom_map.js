@@ -13,6 +13,7 @@ var separation = data.dim.separation/pixels_nanometer
 var neighbors = data.neighbors
 
 
+
 // convert the nanometers to pixels times whatever scale is used
 var x_image = d3.scaleLinear()
   .domain([0, 2*width ])
@@ -161,6 +162,11 @@ function update_atom_line(){
 function update_atom_min(){
 
   var selectedColumn = d3.select("#selectFeature").property("value")
+  var colorpicker1 = d3.select('#colorpicker1').property("value")
+  var colorpicker2 = d3.select('#colorpicker2').property("value")
+  console.log(colorpicker1 )
+  console.log(colorpicker2)
+  shades.range([colorpicker1, colorpicker2])
   shades.domain([d3.min(neighbors_filter, function(d) { return +d[selectedColumn]}),d3.max(neighbors_filter, function(d) { return +d[selectedColumn] })])
 
   var selectedGroup_value = d3.select('#selectPlaneSublattice').property("value")
@@ -187,7 +193,6 @@ function update_atom_min(){
       })
       .attr("stroke","white")
       .attr("stroke-width", 2)
-      .attr("test", function(d) {return console.log(shades(+d[selectedColumn]))})
       .style("fill", function(d) {return shades(+d[selectedColumn])})
       //.attr("test", function(d) {return console.log(zone_all[1].includes(d.combined)) })
       .style("fill-opacity", .4)
@@ -257,6 +262,68 @@ function update_atom_min(){
         .attr("fill", "green")
 
       center_dotEnter.exit().remove()
+
+
+      //http://bl.ocks.org/mbostock/3202354 and https://www.d3-graph-gallery.com/graph/custom_legend.html
+
+               // clear current legend
+               d3.selectAll("rect.legendrect").remove()
+
+
+               //write out in the legend how much the value of the selected column is increasing with each increase in shading
+               min_color=(shades.domain()[1]-shades.domain()[0])/9
+               console.log(shades.ticks(6).slice(1).reverse())
+
+
+               var legendrect = svg
+                                 .selectAll("rect.legendrect")
+                                 .data(['#f7fbff', '#deebf7', '#c6dbef', '#9ecae1', '#6baed6', '#4292c6', '#2171b5', '#08519c', '#08306b'])
+
+               var legendrectEnter = legendrect
+                                       .enter()
+                                       .append("rect")
+                                       .attr("class", "legendrect")
+                                       .attr("transform", function(d, i) { return "translate(" + (x_image(width)+ 400) + "," + (20 + i * 40) + ")"; });
+
+               legendrectEnter
+                   .attr("width", 20)
+                   .attr("height", 40)
+                   .style("fill", function(d, i){ return shades(shades.domain()[0] + min_color*i)})
+
+
+
+               legendrectEnter.exit().remove()
+
+
+
+               // clear current legend
+               d3.selectAll("text.legendtext").remove()
+
+
+               //write out in the legend how much the value of the selected column is increasing with each increase in shading
+               min_color=(shades.domain()[1]-shades.domain()[0])/9
+
+
+               var legendtext = svg
+                                 .selectAll("text.legendtext")
+                                 .data(['#f7fbff', '#deebf7', '#c6dbef', '#9ecae1', '#6baed6', '#4292c6', '#2171b5', '#08519c', '#08306b'])
+
+               var legendtextEnter = legendtext
+                                       .enter()
+                                       .append("text")
+                                       .attr("class", "legendtext")
+                                       .attr("transform", function(d, i) { return "translate(" + (x_image(width) + 450) + "," + (20 + i * 40) + ")"; });
+
+               legendtextEnter
+                   .attr("x", 26)
+                   .attr("y", 10)
+                   .attr("dy", ".35em")
+                   .text(function(d,i) {return shades.domain()[0] + min_color*i});
+
+               legendtextEnter.exit().remove()
+
+
+
 }
 
 
@@ -341,6 +408,19 @@ d3.select("#selectFeature").on("change",function(event) {
   update2(3)
       })
 
+d3.select("#colorpicker1").on("change",function(event) {
+      update_plane_selection()
+      update_atom_line()
+      update_atom_min()
+      update2(3)
+    })
+
+d3.select("#colorpicker2").on("change",function(event) {
+      update_plane_selection()
+      update_atom_line()
+      update_atom_min()
+      update2(3)
+    })
 d3.select("#selectPlane").on("change",function(event) {
       update_plane_selection()
       update_atom_line()

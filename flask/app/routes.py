@@ -1,4 +1,4 @@
-from flask import render_template,  url_for, Flask, render_template, request, jsonify, session
+from flask import render_template,  url_for, Flask, render_template, request, jsonify, session, send_file
 from app import app
 from app.forms import FirstSublattice, ViewImageForm
 import os, pdb, math, json, time
@@ -27,6 +27,12 @@ def add_header(response):
     response.headers['Cache-Control'] = 'public, max-age=0'
     return response
 
+
+@app.route('/download/<filename>')
+def download(filename):
+    #For windows you need to use drive name [ex: F:/Example.pdf]
+    path = "static/data_json/neighbors_test.csv"
+    return send_file(path, as_attachment=True)
 
 @app.route('/')
 def upload_file():
