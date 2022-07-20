@@ -77,7 +77,9 @@ Installation
  How to Cite TEMWizard
  ======================
 
-  If you find this application useful and want to publish your results, please cite our repository.
+  If you find this application useful and want to publish your results, please cite our publication:
+  
+Wang, L., Zhao, J., Kuo, C-T., Matthews, B.E., Oostrom, M.T., Spurgeon, S.R., Bowden, M.E., Lee, S-J., Lee, J-S., Guo, E-J., Wang, J., Chambers, S.A., and Y. Du. “Synthesis and electronic properties of epitaxial SrNiO3/SrTiO3 superlattices.” Physical Review Materials. (2022). https://doi.org/10.1103/PhysRevMaterials.6.075006
 
  Contact Information
  ======================
