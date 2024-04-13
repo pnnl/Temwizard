@@ -86,7 +86,7 @@ Wang, L., Zhao, J., Kuo, C-T., Matthews, B.E., Oostrom, M.T., Spurgeon, S.R., Bo
 
  For questions about TEMWizard usage, contact Marjolein Oostrom (marjolein.oostrom@pnnl.gov) or Steven Spurgeon (steven.spurgeon@pnnl.gov).
 
- Acknowledgments
+ Acknowledgments/Disclaimer
 ======================
 
 This work is supported by the U.S. Department of Energy (DOE), Office of Science, Office of Basic Energy Sciences, Division of Materials Sciences and Engineering under Award #10122 at Pacific Northwest National Laboratory (PNNL). PNNL is a multiprogram national laboratory operated for the U.S. Department of Energy (DOE) by Battelle Memorial Institute under Contract No. DE-AC05-76RL0-1830.
